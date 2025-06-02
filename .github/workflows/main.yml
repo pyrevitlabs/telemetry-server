@@ -49,5 +49,5 @@ jobs:
       - name: Build Docker image
         run: docker build -t pyrevit-telemetryserver:latest .
 
-      # - name: Push Docker image # Optional, uncomment if pushing
+      # - name: Push Docker image # Will be uncommented if pushing
       #   run: docker push pyrevit-telemetryserver:latest
