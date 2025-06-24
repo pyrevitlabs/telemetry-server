@@ -19,6 +19,8 @@ require (
 	pkg.re/essentialkaos/ek.v10 v12.32.0+incompatible
 )
 
+require github.com/stretchr/testify v1.10.0 // indirect
+
 require (
 	// Indirect dependencies
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
