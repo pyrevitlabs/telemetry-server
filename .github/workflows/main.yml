@@ -3,7 +3,7 @@ name: CI/CD
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: ["**"]
 
 jobs:
   build:
@@ -27,6 +27,9 @@ jobs:
         with:
           name: bin
           path: bin
+
+      - name: Run Tests
+        run: go test ./...
 
   docker:
     runs-on: ubuntu-latest

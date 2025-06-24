@@ -40,7 +40,7 @@ var printHelpAndExit = func(err error, docoptMessage string) {
 	if err != nil {
 		// if err occured print full help
 		// docopt only includes usage section in its message
-		fmt.Fprintln(os.Stderr, help)
+		fmt.Fprint(os.Stderr, help)
 		os.Exit(1)
 	} else {
 		// otherwise print whatever docopt says
