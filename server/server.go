@@ -13,26 +13,25 @@ import (
 
 var ServerId uuid.UUID
 
-func Start(opts *cli.Options, dbConn persistence.Connection, logger *cli.Logger) {
-	//create new id for ths server instance
-	ServerId = uuid.Must(uuid.NewV4())
-
-	// http server router
+func NewRouter(opts *cli.Options, dbConn persistence.Connection, logger *cli.Logger) http.Handler {
 	router := mux.NewRouter().StrictSlash(true)
 
-	// create routes
-	// create scripts routes
 	if opts.ScriptsTable != "" {
 		RouteScripts(router, opts, dbConn, logger)
 	}
-	// create events routes
 	if opts.EventsTable != "" {
 		RouteEvents(router, opts, dbConn, logger)
 	}
-
 	RouteStatus(router, opts, dbConn, logger)
 
-	// start listening now
+	return router
+}
+
+func Start(opts *cli.Options, dbConn persistence.Connection, logger *cli.Logger) {
+	ServerId = uuid.Must(uuid.NewV4())
+
+	router := NewRouter(opts, dbConn, logger)
+
 	logger.Print(fmt.Sprintf("Server listening on %d...", opts.Port))
 	if opts.Https {
 		logger.Fatal(
@@ -42,7 +41,6 @@ func Start(opts *cli.Options, dbConn persistence.Connection, logger *cli.Logger)
 				fmt.Sprintf("%s.key", opts.ExeName),
 				router,
 			))
-
 	} else {
 		logger.Fatal(
 			http.ListenAndServe(
