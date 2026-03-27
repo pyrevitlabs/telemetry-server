@@ -1,0 +1,74 @@
+@Telemetry_Api_HostAddress = http://localhost:8080
+
+### Get Status
+GET {{Telemetry_Api_HostAddress}}/api/v2/status
+Accept: application/json
+
+### Post Script Record
+POST {{Telemetry_Api_HostAddress}}/api/v2/scripts
+Content-Type: application/json
+
+{
+  "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "meta": {
+    "schema": "2.0.0"
+  },
+  "timestamp": "2024-03-27T10:00:00Z",
+  "username": "testuser",
+  "host_user": "ad\\testuser",
+  "revitBuild": "2024.1",
+  "revit": "Revit 2024",
+  "pyrevit": "4.8.12",
+  "clone": "master",
+  "debug": false,
+  "config": true,
+  "from_gui": true,
+  "exec_id": "exec-123",
+  "exec_timestamp": "2024-03-27T10:00:05Z",
+  "commandbundle": "bundle-xyz",
+  "commandextension": "ext-abc",
+  "commandname": "TestCommand",
+  "commanduniquename": "TestUniqueName",
+  "scriptpath": "C:/scripts/test.py",
+  "trace": {
+    "message": "Script executed successfully",
+    "engine": {
+      "type": "IronPython",
+      "version": "2.7.12",
+      "sysPath": [
+        "path1",
+        "path2"
+      ],
+      "configs": "test configs"
+    }
+  }
+}
+
+### Post Event Record
+POST {{Telemetry_Api_HostAddress}}/api/v2/events
+Content-Type: application/json
+
+{
+  "handler_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "meta": {
+    "schema": "2.0.0"
+  },
+  "type": "AppStartup",
+  "status": "success",
+  "timestamp": "2024-03-27T10:00:00Z",
+  "username": "testuser",
+  "host_user": "ad\\testuser",
+  "revitbuild": "2024.1",
+  "revit": "Revit 2024",
+  "cancelled": false,
+  "docid": 42,
+  "doctype": "doc type",
+  "doctemplate": "doc template",
+  "docname": "doc name",
+  "docpath": "C:\\doc.rvt",
+  "projectname": "doc.rvt",
+  "projectnum": "projectnum"
+}
+
+### Get Prometheus Metrics
+GET {{Telemetry_Api_HostAddress}}/metrics

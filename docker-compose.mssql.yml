@@ -1,0 +1,24 @@
+services:
+  telemetry-api:
+    environment:
+      - DbProvider=mssql
+      - ConnectionStrings__DefaultConnection=Server=telemetry-db;Database=${MSSQL_DATABASE_NAME};User Id=${MSSQL_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+    depends_on:
+      telemetry-db:
+        condition: service_healthy
+
+  telemetry-db:
+    container_name: telemetry-db
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      - ACCEPT_EULA=${MSSQL_ACCEPT_EULA}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+    volumes:
+      - ./telemetry-db/mssql:/var/opt/mssql
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${MSSQL_SA_PASSWORD}' -Q 'SELECT 1' -C" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

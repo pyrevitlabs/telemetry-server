@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_PATH: bin
+  BUILD_CONFIGURATION: Debug
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Test
+        run: dotnet test --no-build -c ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: '**/TestResults/*.*'

@@ -1,0 +1,13 @@
+<Solution>
+    <Folder Name="/src/">
+        <Project Path="src\Telemetry.Api\Telemetry.Api.csproj" />
+        <Project Path="src\Telemetry.Migrations.Oracle\Telemetry.Migrations.Oracle.csproj" />
+        <Project Path="src\Telemetry.Migrations.Postgres\Telemetry.Migrations.Postgres.csproj" />
+        <Project Path="src\Telemetry.Migrations.Sqlite\Telemetry.Migrations.Sqlite.csproj" />
+        <Project Path="src\Telemetry.Migrations.SqlServer\Telemetry.Migrations.SqlServer.csproj" />
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests\Telemetry.Api.IntegrationTests\Telemetry.Api.IntegrationTests.csproj" />
+        <Project Path="tests\Telemetry.Api.UnitTests\Telemetry.Api.UnitTests.csproj" />
+    </Folder>
+</Solution>

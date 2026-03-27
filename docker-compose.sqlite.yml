@@ -1,0 +1,7 @@
+services:
+  telemetry-api:
+    environment:
+      - DbProvider=sqlite
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/${SQLITE_DATABASE_NAME}.db
+    volumes:
+      - ./telemetry-db/sqlite:/app/data
