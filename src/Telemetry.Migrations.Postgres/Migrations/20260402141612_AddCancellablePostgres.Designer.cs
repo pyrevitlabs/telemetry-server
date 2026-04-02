@@ -2,120 +2,128 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Telemetry.Api.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace Telemetry.Migrations.Sqlite.Migrations
+namespace Telemetry.Migrations.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260402141612_AddCancellablePostgres")]
+    partial class AddCancellablePostgres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Telemetry.Api.Domain.Models.EventRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<bool?>("Cancellable")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("cancellable");
 
                     b.Property<bool?>("Cancelled")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("cancelled");
 
                     b.Property<int>("DocumentId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("docid");
 
                     b.Property<string>("DocumentName")
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("docname");
 
                     b.Property<string>("DocumentPath")
                         .HasMaxLength(1024)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(1024)")
                         .HasColumnName("docpath");
 
                     b.Property<string>("DocumentTemplate")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("doctemplate");
 
                     b.Property<string>("DocumentType")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("doctype");
 
                     b.Property<string>("EventArgs")
                         .HasMaxLength(8000)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(8000)")
                         .HasColumnName("args");
 
                     b.Property<string>("EventType")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("type");
 
                     b.Property<Guid>("HandlerId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uuid")
                         .HasColumnName("handler_id");
 
                     b.Property<string>("HostUsername")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("host_user");
 
                     b.Property<string>("Meta")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("meta");
 
                     b.Property<string>("ProjectName")
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("projectname");
 
                     b.Property<string>("ProjectNum")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("projectnum");
 
                     b.Property<string>("RevitBuild")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("revitbuild");
 
                     b.Property<string>("RevitVersion")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("revit");
 
                     b.Property<string>("Status")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("status");
 
                     b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("timestamp");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("username");
 
                     b.HasKey("Id");
@@ -127,131 +135,131 @@ namespace Telemetry.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("CloneName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("clone");
 
                     b.Property<string>("CommandBundle")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("commandbundle");
 
                     b.Property<string>("CommandExtension")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("commandextension");
 
                     b.Property<string>("CommandName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("commandname");
 
                     b.Property<string>("CommandResults")
                         .HasMaxLength(8000)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(8000)")
                         .HasColumnName("commandresults");
 
                     b.Property<string>("CommandUniqueName")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("commanduniquename");
 
                     b.Property<string>("DocumentName")
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("docname");
 
                     b.Property<string>("DocumentPath")
                         .HasMaxLength(1024)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(1024)")
                         .HasColumnName("docpath");
 
                     b.Property<string>("ExecId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("exec_id");
 
                     b.Property<DateTimeOffset>("ExecTimestamp")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("exec_timestamp");
 
                     b.Property<string>("HostUsername")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("host_user");
 
                     b.Property<bool>("IsConfig")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("config");
 
                     b.Property<bool>("IsDebug")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("debug");
 
                     b.Property<bool>("IsExecFromGui")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("from_gui");
 
                     b.Property<string>("Meta")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("meta");
 
                     b.Property<string>("PyRevitVersion")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("pyrevit");
 
                     b.Property<int>("ResultCode")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("resultcode");
 
                     b.Property<string>("RevitBuild")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("revitbuild");
 
                     b.Property<string>("RevitVersion")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("revit");
 
                     b.Property<string>("ScriptPath")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(1024)")
                         .HasColumnName("scriptpath");
 
                     b.Property<Guid>("SessionId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uuid")
                         .HasColumnName("sessionid");
 
                     b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("timestamp");
 
                     b.Property<string>("Trace")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("trace");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("username");
 
                     b.HasKey("Id");

@@ -30,7 +30,8 @@ namespace Telemetry.Migrations.Oracle.Migrations
                         .HasColumnName("id");
 
                     b.Property<bool?>("Cancellable")
-                        .HasColumnType("BOOLEAN");
+                        .HasColumnType("BOOLEAN")
+                        .HasColumnName("cancellable");
 
                     b.Property<bool?>("Cancelled")
                         .HasColumnType("BOOLEAN")

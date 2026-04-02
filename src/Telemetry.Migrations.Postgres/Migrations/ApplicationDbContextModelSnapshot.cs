@@ -30,7 +30,8 @@ namespace Telemetry.Migrations.Postgres.Migrations
                         .HasColumnName("id");
 
                     b.Property<bool?>("Cancellable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("cancellable");
 
                     b.Property<bool?>("Cancelled")
                         .HasColumnType("boolean")

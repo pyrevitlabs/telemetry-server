@@ -30,7 +30,8 @@ namespace Telemetry.Migrations.SqlServer.Migrations
                         .HasColumnName("id");
 
                     b.Property<bool?>("Cancellable")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("cancellable");
 
                     b.Property<bool?>("Cancelled")
                         .HasColumnType("bit")
