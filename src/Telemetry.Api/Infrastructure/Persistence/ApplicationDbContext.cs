@@ -188,6 +188,7 @@ namespace Telemetry.Api.Infrastructure.Persistence
                 entity.Property(e => e.RevitBuild).HasColumnName("revitbuild");
                 entity.Property(e => e.RevitVersion).HasColumnName("revit");
                 entity.Property(e => e.Cancelled).HasColumnName("cancelled");
+                entity.Property(e => e.Cancellable).HasColumnName("cancellable");
                 entity.Property(e => e.DocumentId).HasColumnName("docid");
                 entity.Property(e => e.DocumentType).HasColumnName("doctype");
                 entity.Property(e => e.DocumentTemplate).HasColumnName("doctemplate");
