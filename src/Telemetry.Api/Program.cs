@@ -168,10 +168,6 @@ catch (Exception ex)
     Log.Fatal(ex, "Migration terminated unexpectedly");
     throw;
 }
-finally
-{
-    Log.CloseAndFlush();
-}
 
 try
 {
