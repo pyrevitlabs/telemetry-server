@@ -11,7 +11,6 @@
     <ItemGroup>
         <PackageReference Include="TUnit"/>
         <PackageReference Include="Moq"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core"/>
     </ItemGroup>
 
     <ItemGroup>
