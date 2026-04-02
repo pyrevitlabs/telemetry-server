@@ -6,7 +6,6 @@ using Prometheus;
 using Telemetry.Api.Application.Interfaces;
 using Telemetry.Api.Application.Services;
 using Telemetry.Api.Infrastructure.Persistence;
-using Telemetry.Api.Web.Middleware;
 using Serilog;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -86,9 +85,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             Log.Information("Using MongoDB database");
             break;
         default:
-            options.UseInMemoryDatabase("TelemetryDb");
-            Log.Information("Using In a Memory database");
-            break;
+            throw new NotSupportedException($"Provider {dbProvider} is not supported.");
     }
 });
 
@@ -135,8 +132,6 @@ builder.Services.AddVersionedApiExplorer(setup => {
 
 WebApplication app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -145,7 +140,6 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v2/swagger.json", "pyRevit Telemetry API v2");
     });
-    app.UseDeveloperExceptionPage();
 }
 
 app.UseRouting();
