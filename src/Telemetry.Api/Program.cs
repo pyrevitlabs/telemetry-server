@@ -47,42 +47,35 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             Log.Information("Using Oracle database");
             options.UseOracle(connectionString,
                 x => x.MigrationsAssembly("Telemetry.Migrations.Oracle"));
-
-            Log.Information("Load Oracle migration assembly");
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                Path.Combine(Environment.CurrentDirectory, "Telemetry.Migrations.Oracle.dll"));
+            
+            LoadAssembly(dbProvider, "Telemetry.Migrations.Oracle.dll");
             break;
         case "postgres":
             Log.Information("Using PostgresSQL database");
             options.UseNpgsql(connectionString,
                 x => x.MigrationsAssembly("Telemetry.Migrations.Postgres"));
-
-            Log.Information("Load PostgresSQL migration assembly");
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                Path.Combine(Environment.CurrentDirectory, "Telemetry.Migrations.Postgres.dll"));
+            
+            LoadAssembly(dbProvider, "Telemetry.Migrations.Postgres.dll");
             break;
         case "sqlite":
             Log.Information("Using SQLite database");
             options.UseSqlite(connectionString,
                 x => x.MigrationsAssembly("Telemetry.Migrations.Sqlite"));
             
-            Log.Information("Load SQLite migration assembly");
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                Path.Combine(Environment.CurrentDirectory, "Telemetry.Migrations.Sqlite.dll"));
+            LoadAssembly(dbProvider, "Telemetry.Migrations.Sqlite.dll");
             break;
         case "mssql":
             Log.Information("Using MS SQL database");
             options.UseSqlServer(connectionString,
                 x => x.MigrationsAssembly("Telemetry.Migrations.SqlServer"));
             
-            Log.Information("Load MS SQL migration assembly");
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                Path.Combine(Environment.CurrentDirectory, "Telemetry.Migrations.SqlServer.dll"));
+            LoadAssembly(dbProvider, "Telemetry.Migrations.SqlServer.dll");
             break;
         case "mongodb":
+            Log.Information("Using MongoDB database");
             string mongoDbName = builder.Configuration.GetValue<string>("MongoDbDatabaseName") ?? "telemetry";
             options.UseMongoDB(connectionString, mongoDbName);
-            Log.Information("Using MongoDB database");
+            
             break;
         default:
             throw new NotSupportedException($"Provider {dbProvider} is not supported.");
@@ -177,4 +170,17 @@ try
 catch (Exception ex)
 {
     app.Logger.LogCritical(ex, "Host terminated unexpectedly");
+}
+
+return;
+
+void LoadAssembly(string provider, string assemlyName)
+{
+    string assemblyPath = Path.Combine(Environment.CurrentDirectory, assemlyName);
+    if (File.Exists(assemblyPath))
+    {
+        Log.Information(
+            "Load {Provider} migration assembly {AssemblyPath}", provider, assemblyPath);
+        AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+    }
 }
