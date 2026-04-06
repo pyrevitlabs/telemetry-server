@@ -171,7 +171,7 @@ namespace Telemetry.Api.Infrastructure.Persistence
             });
         }
 
-        private static void ConfigureSqlModel(ModelBuilder modelBuilder)
+        private void ConfigureSqlModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ScriptRecord>(entity =>
             {
@@ -181,16 +181,22 @@ namespace Telemetry.Api.Infrastructure.Persistence
 
                     trace.OwnsOne(e => e.Engine, engine =>
                     {
+                        if (Database.IsOracle())
+                        {
+                            engine.Property(e => e.Configs)
+                                .HasColumnName(PropertyNames.EngineConfigs)
+                                .HasColumnType("json");
+                        }
+                        else if (Database.IsNpgsql())
+                        {
+                            engine.Property(e => e.Configs)
+                                .HasColumnName(PropertyNames.EngineConfigs)
+                                .HasColumnType("jsonb");
+                        }
+
                         engine.Property(e => e.Type).HasColumnName(PropertyNames.EngineType);
                         engine.Property(e => e.Version).HasColumnName(PropertyNames.EngineVersion);
-                        engine.Property(e => e.Configs).HasColumnName(PropertyNames.EngineConfigs);
-
-                        engine.Property(e => e.SysPaths)
-                            .HasColumnName(PropertyNames.EngineSysPaths)
-                            .HasConversion(
-                                v => v == null ? null : string.Join(";", v),
-                                v => string.IsNullOrEmpty(v) ? null : v.Split(";")
-                            );
+                        engine.Property(e => e.SysPaths).HasColumnName(PropertyNames.EngineSysPaths);
                     });
                 });
             });
