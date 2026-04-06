@@ -49,7 +49,7 @@ namespace Telemetry.Api.Web.Controllers
             {
                 CancellationToken ct = HttpContext.RequestAborted;
 
-                if (dto.Meta.SchemaVersion != new Version(2, 0, 0))
+                if (dto.Meta.SchemaVersion.Major != 2)
                 {
                     return BadRequest(new ProblemDetails()
                     {
@@ -94,7 +94,7 @@ namespace Telemetry.Api.Web.Controllers
             {
                 CancellationToken ct = HttpContext.RequestAborted;
                 
-                if (dto.Meta.SchemaVersion != new Version(2, 0, 0))
+                if (dto.Meta.SchemaVersion.Major != 2)
                 {
                     return BadRequest(new ProblemDetails()
                     {
