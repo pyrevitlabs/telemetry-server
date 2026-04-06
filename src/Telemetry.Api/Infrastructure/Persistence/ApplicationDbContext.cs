@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MongoDB.Bson;
+using MongoDB.EntityFrameworkCore.Extensions;
 using System.Data;
 using System.Data.Common;
 using System.Text.Json;
@@ -135,74 +137,207 @@ namespace Telemetry.Api.Infrastructure.Persistence
         {
             modelBuilder.Entity<ScriptRecord>(entity =>
             {
-                entity.ToTable("script_record");
+                entity.ToTable("scripts");
+                entity.ToCollection("scripts");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.SessionId).HasColumnName("sessionid");
-                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
-                entity.Property(e => e.Username).HasColumnName("username");
-                entity.Property(e => e.HostUsername).HasColumnName("host_user");
-                entity.Property(e => e.RevitBuild).HasColumnName("revitbuild");
-                entity.Property(e => e.RevitVersion).HasColumnName("revit");
-                entity.Property(e => e.PyRevitVersion).HasColumnName("pyrevit");
-                entity.Property(e => e.CloneName).HasColumnName("clone");
-                entity.Property(e => e.IsDebug).HasColumnName("debug");
-                entity.Property(e => e.IsConfig).HasColumnName("config");
-                entity.Property(e => e.IsExecFromGui).HasColumnName("from_gui");
-                entity.Property(e => e.ExecId).HasColumnName("exec_id");
-                entity.Property(e => e.ExecTimestamp).HasColumnName("exec_timestamp");
-                entity.Property(e => e.CommandBundle).HasColumnName("commandbundle");
-                entity.Property(e => e.CommandExtension).HasColumnName("commandextension");
-                entity.Property(e => e.CommandName).HasColumnName("commandname");
-                entity.Property(e => e.CommandUniqueName).HasColumnName("commanduniquename");
-                entity.Property(e => e.DocumentName).HasColumnName("docname");
-                entity.Property(e => e.DocumentPath).HasColumnName("docpath");
-                entity.Property(e => e.ResultCode).HasColumnName("resultcode");
-                entity.Property(e => e.ScriptPath).HasColumnName("scriptpath");
-                entity.Property(e => e.CommandResults).HasColumnName("commandresults");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("_id")
+                    .HasElementName("_id");
+
+                entity.Property(e => e.SessionId)
+                    .HasColumnName("sessionid")
+                    .HasElementName("sessionid");
+
+                entity.Property(e => e.Timestamp)
+                    .HasColumnName("timestamp")
+                    .HasElementName("timestamp")
+                    .HasBsonRepresentation(BsonType.DateTime);
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
+                    .HasElementName("username");
+
+                entity.Property(e => e.HostUsername)
+                    .HasColumnName("host_user")
+                    .HasElementName("host_user");
+
+                entity.Property(e => e.RevitBuild)
+                    .HasColumnName("revitbuild")
+                    .HasElementName("revitbuild");
+
+                entity.Property(e => e.RevitVersion)
+                    .HasColumnName("revit")
+                    .HasElementName("revit");
+
+                entity.Property(e => e.PyRevitVersion)
+                    .HasColumnName("pyrevit")
+                    .HasElementName("pyrevit");
+
+                entity.Property(e => e.CloneName)
+                    .HasColumnName("clone")
+                    .HasElementName("clone");
+
+                entity.Property(e => e.IsDebug)
+                    .HasColumnName("debug")
+                    .HasElementName("debug");
+
+                entity.Property(e => e.IsConfig)
+                    .HasColumnName("config")
+                    .HasElementName("config");
+
+                entity.Property(e => e.IsExecFromGui)
+                    .HasColumnName("from_gui")
+                    .HasElementName("from_gui");
+
+                entity.Property(e => e.ExecId)
+                    .HasColumnName("exec_id")
+                    .HasElementName("exec_id");
+
+                entity.Property(e => e.ExecTimestamp)
+                    .HasColumnName("exec_timestamp")
+                    .HasElementName("exec_timestamp")
+                    .HasBsonRepresentation(BsonType.DateTime);
+
+                entity.Property(e => e.CommandBundle)
+                    .HasColumnName("commandbundle")
+                    .HasElementName("commandbundle");
+
+                entity.Property(e => e.CommandExtension)
+                    .HasColumnName("commandextension")
+                    .HasElementName("commandextension");
+
+                entity.Property(e => e.CommandName)
+                    .HasColumnName("commandname")
+                    .HasElementName("commandname");
+
+                entity.Property(e => e.CommandUniqueName)
+                    .HasColumnName("commanduniquename")
+                    .HasElementName("commanduniquename");
+
+                entity.Property(e => e.DocumentName).HasColumnName("docname")
+                    .HasElementName("docname");
+
+                entity.Property(e => e.DocumentPath)
+                    .HasColumnName("docpath")
+                    .HasElementName("docpath");
+
+                entity.Property(e => e.ResultCode)
+                    .HasColumnName("resultcode")
+                    .HasElementName("resultcode");
+
+                entity.Property(e => e.ScriptPath)
+                    .HasColumnName("scriptpath")
+                    .HasElementName("scriptpath");
+
+                entity.Property(e => e.CommandResults)
+                    .HasColumnName("commandresults")
+                    .HasElementName("commandresults");
 
                 entity.Property(e => e.Meta)
                     .HasColumnName("meta")
+                    .HasElementName("meta")
                     .HasConversion(
-                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                        v => JsonSerializer.Deserialize<MetaRecord>(v, (JsonSerializerOptions?)null)!);
+                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Web),
+                        v => JsonSerializer.Deserialize<MetaRecord>(v, JsonSerializerOptions.Web)!);
 
                 entity.Property(e => e.Trace)
                     .HasColumnName("trace")
+                    .HasElementName("trace")
                     .HasConversion(
-                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                        v => JsonSerializer.Deserialize<TraceInfo>(v, (JsonSerializerOptions?)null)!);
+                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Web),
+                        v => JsonSerializer.Deserialize<TraceInfo>(v, JsonSerializerOptions.Web)!);
             });
 
             modelBuilder.Entity<EventRecord>(entity =>
             {
-                entity.ToTable("event_record");
+                entity.ToTable("events");
+                entity.ToCollection("events");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.HandlerId).HasColumnName("handler_id");
-                entity.Property(e => e.EventType).HasColumnName("type");
-                entity.Property(e => e.Status).HasColumnName("status");
-                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
-                entity.Property(e => e.Username).HasColumnName("username");
-                entity.Property(e => e.HostUsername).HasColumnName("host_user");
-                entity.Property(e => e.RevitBuild).HasColumnName("revitbuild");
-                entity.Property(e => e.RevitVersion).HasColumnName("revit");
-                entity.Property(e => e.Cancelled).HasColumnName("cancelled");
-                entity.Property(e => e.Cancellable).HasColumnName("cancellable");
-                entity.Property(e => e.DocumentId).HasColumnName("docid");
-                entity.Property(e => e.DocumentType).HasColumnName("doctype");
-                entity.Property(e => e.DocumentTemplate).HasColumnName("doctemplate");
-                entity.Property(e => e.DocumentName).HasColumnName("docname");
-                entity.Property(e => e.DocumentPath).HasColumnName("docpath");
-                entity.Property(e => e.ProjectName).HasColumnName("projectname");
-                entity.Property(e => e.ProjectNum).HasColumnName("projectnum");
-                entity.Property(e => e.EventArgs).HasColumnName("args");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("_id")
+                    .HasElementName("_id");
+
+                entity.Property(e => e.HandlerId)
+                    .HasColumnName("handler_id")
+                    .HasElementName("handler_id");
+
+                entity.Property(e => e.EventType)
+                    .HasColumnName("type")
+                    .HasElementName("type");
+
+                entity.Property(e => e.Status)
+                    .HasColumnName("status")
+                    .HasElementName("status");
+
+                entity.Property(e => e.Timestamp)
+                    .HasColumnName("timestamp")
+                    .HasElementName("timestamp")
+                    .HasBsonRepresentation(BsonType.DateTime);
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
+                    .HasElementName("username");
+
+                entity.Property(e => e.HostUsername)
+                    .HasColumnName("host_user")
+                    .HasElementName("host_user");
+
+                entity.Property(e => e.RevitBuild)
+                    .HasColumnName("revitbuild")
+                    .HasElementName("revitbuild");
+
+                entity.Property(e => e.RevitVersion)
+                    .HasColumnName("revit")
+                    .HasElementName("revit");
+
+                entity.Property(e => e.Cancelled)
+                    .HasColumnName("cancelled")
+                    .HasElementName("cancelled");
+
+                entity.Property(e => e.Cancellable)
+                    .HasColumnName("cancellable")
+                    .HasElementName("cancellable");
+
+                entity.Property(e => e.DocumentId)
+                    .HasColumnName("docid")
+                    .HasElementName("docid");
+
+                entity.Property(e => e.DocumentType)
+                    .HasColumnName("doctype")
+                    .HasElementName("doctype");
+
+                entity.Property(e => e.DocumentTemplate)
+                    .HasColumnName("doctemplate")
+                    .HasElementName("doctemplate");
+
+                entity.Property(e => e.DocumentName)
+                    .HasColumnName("docname")
+                    .HasElementName("docname");
+
+                entity.Property(e => e.DocumentPath)
+                    .HasColumnName("docpath")
+                    .HasElementName("docpath");
+
+                entity.Property(e => e.ProjectName)
+                    .HasColumnName("projectname")
+                    .HasElementName("projectname");
+
+                entity.Property(e => e.ProjectNum)
+                    .HasColumnName("projectnum")
+                    .HasElementName("projectnum");
+
+                entity.Property(e => e.EventArgs)
+                    .HasColumnName("args")
+                    .HasElementName("args");
 
                 entity.Property(e => e.Meta)
                     .HasColumnName("meta")
+                    .HasElementName("meta")
                     .HasConversion(
-                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                        v => JsonSerializer.Deserialize<MetaRecord>(v, (JsonSerializerOptions?)null)!);
+                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Web),
+                        v => JsonSerializer.Deserialize<MetaRecord>(v, JsonSerializerOptions.Web)!);
             });
 
             base.OnModelCreating(modelBuilder);

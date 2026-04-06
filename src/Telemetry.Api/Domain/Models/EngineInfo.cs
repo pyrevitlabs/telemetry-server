@@ -1,5 +1,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Telemetry.Api.JsonConverters;
 
 namespace Telemetry.Api.Domain.Models
 {
@@ -13,7 +15,7 @@ namespace Telemetry.Api.Domain.Models
         ///     <br /><a href="https://pyrevitlabs.notion.site/Engines-7973ca3328c34fd1a95462f5c655475b">Engine types</a>.
         /// </summary>
         [MaxLength(100)]
-        [BsonElement("type")]
+        [JsonPropertyName("type")]
         public required string Type { get; init; }
 
         /// <summary>
@@ -21,20 +23,20 @@ namespace Telemetry.Api.Domain.Models
         ///     <br /> <a href="https://pyrevitlabs.notion.site/Engines-7973ca3328c34fd1a95462f5c655475b">Engines list</a>.
         /// </summary>
         [MaxLength(100)] 
-        [BsonElement("version")]
+        [JsonPropertyName("version")]
         public required string Version { get; init; }
 
         /// <summary>
         ///     System paths using by script.
         /// </summary>
-        [BsonElement("syspath")]
+        [JsonPropertyName("syspath")]
         public string[]? SysPaths { get; init; }
 
         /// <summary>
         ///     Dynamic script configs data.
         /// </summary>
-        [MaxLength(8000)] 
-        [BsonElement("configs")]
+        [MaxLength(8000)]
+        [JsonPropertyName("configs")]
         public string? Configs { get; init; }
     }
 }

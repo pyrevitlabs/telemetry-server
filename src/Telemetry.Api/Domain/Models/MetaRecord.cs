@@ -1,4 +1,5 @@
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 namespace Telemetry.Api.Domain.Models
 {
@@ -10,7 +11,7 @@ namespace Telemetry.Api.Domain.Models
         /// <summary>
         ///     Schema version.
         /// </summary>
-        [BsonElement("schema")]
+        [JsonPropertyName("version")]
         public required Version SchemaVersion { get; init; }
     }
 }

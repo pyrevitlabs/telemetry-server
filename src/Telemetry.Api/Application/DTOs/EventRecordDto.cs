@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Telemetry.Api.JsonConverters;
 
 namespace Telemetry.Api.Application.DTOs
 {
@@ -159,6 +160,7 @@ namespace Telemetry.Api.Application.DTOs
         /// </summary>
         [MaxLength(8000)]
         [JsonPropertyName("args")]
+        [JsonConverter(typeof(DynamicDataJsonConverter))]
         public string? EventArgs { get; init; }
     }
 }

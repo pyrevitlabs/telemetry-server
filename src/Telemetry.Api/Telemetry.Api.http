@@ -39,9 +39,22 @@ Content-Type: application/json
         "path1",
         "path2"
       ],
-      "configs": "test configs"
+      "configs": {
+        "config": 1,
+        "version": 12,
+        "some_object": {
+          "hey": "hey"
+        },
+        "some_array": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
     }
-  }
+  },
+  "commandresults": {}
 }
 
 ### Post Event Record
@@ -67,7 +80,13 @@ Content-Type: application/json
   "docname": "doc name",
   "docpath": "C:\\doc.rvt",
   "projectname": "doc.rvt",
-  "projectnum": "projectnum"
+  "projectnum": "projectnum",
+  "args": {
+    "operation": "transaction",
+    "added": 1,
+    "deleted": 2,
+    "modified": 4
+  }
 }
 
 ### Get Prometheus Metrics

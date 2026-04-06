@@ -12,7 +12,8 @@ internal class DynamicDataJsonConverter : JsonConverter<string?>
             return null;
         }
 
-        return JsonDocument.ParseValue(ref reader).RootElement.GetRawText();
+        using JsonDocument parsed = JsonDocument.ParseValue(ref reader);
+        return parsed.RootElement.GetRawText();
     }
 
     public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
