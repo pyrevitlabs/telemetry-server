@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.EntityFrameworkCore.Extensions;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using System.Text.Json;
 using Telemetry.Api.Application.Interfaces;
 using Telemetry.Api.Domain.Models;
@@ -104,6 +105,10 @@ namespace Telemetry.Api.Infrastructure.Persistence
                 else if (Database.IsInMemory())
                 {
                     return "memorydb";
+                } else if (Database.ProviderName!.Equals("MongoDB.EntityFrameworkCore"))
+                {
+                    return $"EF Core lib version: " +
+                           $"{typeof(MongoPropertyBuilderExtensions).Assembly.GetName().Version?.ToString() ?? "mongodb"}";
                 }
 
                 if (query != null)
@@ -189,10 +194,20 @@ namespace Telemetry.Api.Infrastructure.Persistence
                 entity.OwnsOne(e => e.Trace, trace =>
                 {
                     trace.Property(e => e.Message).HasElementName(DbConstants.Columns.TraceMessage);
-                    trace.Property(e => e.Engine.Type).HasElementName(DbConstants.Columns.EngineType);
-                    trace.Property(e => e.Engine.Version).HasElementName(DbConstants.Columns.EngineVersion);
-                    trace.Property(e => e.Engine.Configs).HasElementName(DbConstants.Columns.EngineConfigs);
-                    trace.Property(e => e.Engine.SysPaths).HasElementName(DbConstants.Columns.EngineSysPaths);
+
+                    trace.OwnsOne(e => e.Engine, engine =>
+                    {
+                        engine.Property(e => e.Type).HasElementName(DbConstants.Columns.EngineType);
+                        engine.Property(e => e.Version).HasElementName(DbConstants.Columns.EngineVersion);
+                        engine.Property(e => e.Configs).HasElementName(DbConstants.Columns.EngineConfigs);
+
+                        engine.Property(e => e.SysPaths)
+                            .HasElementName(DbConstants.Columns.EngineSysPaths)
+                            .HasConversion(
+                                v => v == null ? null : string.Join(";", v),
+                                v => string.IsNullOrEmpty(v) ? null : v.Split(";")
+                            );
+                    });
                 });
             });
 
@@ -261,16 +276,20 @@ namespace Telemetry.Api.Infrastructure.Persistence
                 entity.OwnsOne(e => e.Trace, trace =>
                 {
                     trace.Property(e => e.Message).HasColumnName(DbConstants.Columns.TraceMessage);
-                    trace.Property(e => e.Engine.Type).HasColumnName(DbConstants.Columns.EngineType);
-                    trace.Property(e => e.Engine.Version).HasColumnName(DbConstants.Columns.EngineVersion);
-                    trace.Property(e => e.Engine.Configs).HasColumnName(DbConstants.Columns.EngineConfigs);
 
-                    trace.Property(e => e.Engine.SysPaths)
-                        .HasColumnName(DbConstants.Columns.EngineSysPaths)
-                        .HasConversion(
-                            v => v == null ? null : string.Join(";", v),
-                            v => string.IsNullOrEmpty(v) ? null : v.Split(";")
-                        );
+                    trace.OwnsOne(e => e.Engine, engine =>
+                    {
+                        engine.Property(e => e.Type).HasColumnName(DbConstants.Columns.EngineType);
+                        engine.Property(e => e.Version).HasColumnName(DbConstants.Columns.EngineVersion);
+                        engine.Property(e => e.Configs).HasColumnName(DbConstants.Columns.EngineConfigs);
+
+                        engine.Property(e => e.SysPaths)
+                            .HasColumnName(DbConstants.Columns.EngineSysPaths)
+                            .HasConversion(
+                                v => v == null ? null : string.Join(";", v),
+                                v => string.IsNullOrEmpty(v) ? null : v.Split(";")
+                            );
+                    });
                 });
             });
 
