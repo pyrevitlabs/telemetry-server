@@ -19,11 +19,6 @@ namespace Telemetry.Api.Domain.Models
         ///     Unique event id.
         /// </summary>
         public Guid HandlerId { get; init; }
-       
-        /// <summary>
-        ///     Information about telemetry record.
-        /// </summary>
-        public required MetaRecord Meta { get; init; }
 
         /// <summary>
         ///     Event type name.

@@ -23,11 +23,6 @@ namespace Telemetry.Api.Domain.Models
         public Guid SessionId { get; init; }
         
         /// <summary>
-        ///     Information about telemetry record.
-        /// </summary>
-        public required MetaRecord Meta { get; init; }
-        
-        /// <summary>
         ///     When script started.
         /// </summary>
         public DateTimeOffset Timestamp { get; init; }

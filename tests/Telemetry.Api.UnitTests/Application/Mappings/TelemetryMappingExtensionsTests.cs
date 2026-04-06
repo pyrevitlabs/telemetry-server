@@ -110,7 +110,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
             // Assert
             await Assert.That(model.Id).IsNotEqualTo(Guid.Empty);
             await Assert.That(model.SessionId).IsEqualTo(dto.SessionId);
-            await Assert.That(model.Meta.SchemaVersion).IsEqualTo(dto.Meta.SchemaVersion);
             await Assert.That(model.Timestamp).IsEqualTo(dto.Timestamp);
             await Assert.That(model.Username).IsEqualTo(dto.Username);
             await Assert.That(model.HostUsername).IsEqualTo(dto.HostUsername);
@@ -143,7 +142,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
             {
                 Id = Guid.NewGuid(),
                 SessionId = Guid.NewGuid(),
-                Meta = new MetaRecord {SchemaVersion = new Version(2, 0)},
                 Timestamp = DateTimeOffset.Now,
                 Username = "user",
                 HostUsername = "host",
@@ -176,7 +174,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
 
             // Assert
             await Assert.That(dto.SessionId).IsEqualTo(model.SessionId);
-            await Assert.That(dto.Meta.SchemaVersion).IsEqualTo(model.Meta.SchemaVersion);
             await Assert.That(dto.Timestamp).IsEqualTo(model.Timestamp);
             await Assert.That(dto.Username).IsEqualTo(model.Username);
             await Assert.That(dto.HostUsername).IsEqualTo(model.HostUsername);
@@ -233,7 +230,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
             // Assert
             await Assert.That(model.Id).IsNotEqualTo(Guid.Empty);
             await Assert.That(model.HandlerId).IsEqualTo(dto.HandlerId);
-            await Assert.That(model.Meta.SchemaVersion).IsEqualTo(dto.Meta.SchemaVersion);
             await Assert.That(model.EventType).IsEqualTo(dto.EventType);
             await Assert.That(model.Status).IsEqualTo(dto.Status);
             await Assert.That(model.Timestamp).IsEqualTo(dto.Timestamp);
@@ -260,7 +256,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
             {
                 Id = Guid.NewGuid(),
                 HandlerId = Guid.NewGuid(),
-                Meta = new MetaRecord {SchemaVersion = new Version(2, 0)},
                 EventType = "DocOpened",
                 Status = "Success",
                 Timestamp = DateTimeOffset.Now,
@@ -284,7 +279,6 @@ namespace Telemetry.Api.UnitTests.Application.Mappings
 
             // Assert
             await Assert.That(dto.HandlerId).IsEqualTo(model.HandlerId);
-            await Assert.That(dto.Meta.SchemaVersion).IsEqualTo(model.Meta.SchemaVersion);
             await Assert.That(dto.EventType).IsEqualTo(model.EventType);
             await Assert.That(dto.Status).IsEqualTo(model.Status);
             await Assert.That(dto.Timestamp).IsEqualTo(model.Timestamp);

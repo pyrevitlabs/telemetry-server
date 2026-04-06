@@ -86,7 +86,6 @@ namespace Telemetry.Api.Application.Mappings
             {
                 Id = Guid.CreateVersion7(),
                 SessionId = dto.SessionId,
-                Meta = dto.Meta.ToModel(),
                 Timestamp = dto.Timestamp,
                 Username = dto.Username,
                 HostUsername = dto.HostUsername,
@@ -122,7 +121,7 @@ namespace Telemetry.Api.Application.Mappings
             return new ScriptRecordDto
             {
                 SessionId = model.SessionId,
-                Meta = model.Meta.ToDto(),
+                Meta =  new MetaDto(){SchemaVersion = new Version(2,0,0)},
                 Timestamp = model.Timestamp,
                 Username = model.Username,
                 HostUsername = model.HostUsername,
@@ -159,7 +158,6 @@ namespace Telemetry.Api.Application.Mappings
             {
                 Id = Guid.CreateVersion7(),
                 HandlerId = dto.HandlerId,
-                Meta = dto.Meta.ToModel(),
                 EventType = dto.EventType,
                 Status = dto.Status,
                 Timestamp = dto.Timestamp,
@@ -190,7 +188,7 @@ namespace Telemetry.Api.Application.Mappings
             return new EventRecordDto
             {
                 HandlerId = model.HandlerId,
-                Meta = model.Meta.ToDto(),
+                Meta =  new MetaDto(){SchemaVersion = new Version(2,0,0)},
                 EventType = model.EventType,
                 Status = model.Status,
                 Timestamp = model.Timestamp,
