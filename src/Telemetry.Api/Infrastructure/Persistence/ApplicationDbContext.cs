@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Reflection;
 using System.Text.Json;
 using Telemetry.Api.Application.Interfaces;
+using Telemetry.Api.Domain.Constants;
 using Telemetry.Api.Domain.Models;
 
 namespace Telemetry.Api.Infrastructure.Persistence
@@ -105,7 +106,8 @@ namespace Telemetry.Api.Infrastructure.Persistence
                 else if (Database.IsInMemory())
                 {
                     return "memorydb";
-                } else if (Database.ProviderName!.Equals("MongoDB.EntityFrameworkCore"))
+                }
+                else if (Database.ProviderName!.Equals("MongoDB.EntityFrameworkCore"))
                 {
                     return $"EF Core lib version: " +
                            $"{typeof(MongoPropertyBuilderExtensions).Assembly.GetName().Version?.ToString() ?? "mongodb"}";
@@ -152,171 +154,45 @@ namespace Telemetry.Api.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
         }
 
-        private void ConfigureMongoDbModel(ModelBuilder modelBuilder)
+        private static void ConfigureMongoDbModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ScriptRecord>(entity =>
             {
-                entity.ToCollection(DbConstants.Tables.Scripts);
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasElementName(DbConstants.Columns.Id);
-                entity.Property(e => e.SessionId).HasElementName(DbConstants.Columns.SessionId);
-
                 entity.Property(e => e.Timestamp)
-                    .HasElementName(DbConstants.Columns.Timestamp)
                     .HasBsonRepresentation(BsonType.DateTime);
-
-                entity.Property(e => e.Username).HasElementName(DbConstants.Columns.Username);
-                entity.Property(e => e.HostUsername).HasElementName(DbConstants.Columns.HostUsername);
-                entity.Property(e => e.RevitBuild).HasElementName(DbConstants.Columns.RevitBuild);
-                entity.Property(e => e.RevitVersion).HasElementName(DbConstants.Columns.RevitVersion);
-                entity.Property(e => e.PyRevitVersion).HasElementName(DbConstants.Columns.PyRevitVersion);
-                entity.Property(e => e.CloneName).HasElementName(DbConstants.Columns.CloneName);
-                entity.Property(e => e.IsDebug).HasElementName(DbConstants.Columns.IsDebug);
-                entity.Property(e => e.IsConfig).HasElementName(DbConstants.Columns.IsConfig);
-                entity.Property(e => e.IsExecFromGui).HasElementName(DbConstants.Columns.IsExecFromGui);
-                entity.Property(e => e.ExecId).HasElementName(DbConstants.Columns.ExecId);
-
                 entity.Property(e => e.ExecTimestamp)
-                    .HasElementName(DbConstants.Columns.ExecTimestamp)
                     .HasBsonRepresentation(BsonType.DateTime);
-
-                entity.Property(e => e.CommandBundle).HasElementName(DbConstants.Columns.CommandBundle);
-                entity.Property(e => e.CommandExtension).HasElementName(DbConstants.Columns.CommandExtension);
-                entity.Property(e => e.CommandName).HasElementName(DbConstants.Columns.CommandName);
-                entity.Property(e => e.CommandUniqueName).HasElementName(DbConstants.Columns.CommandUniqueName);
-                entity.Property(e => e.DocumentName).HasElementName(DbConstants.Columns.DocumentName);
-                entity.Property(e => e.DocumentPath).HasElementName(DbConstants.Columns.DocumentPath);
-                entity.Property(e => e.ResultCode).HasElementName(DbConstants.Columns.ResultCode);
-                entity.Property(e => e.ScriptPath).HasElementName(DbConstants.Columns.ScriptPath);
-                entity.Property(e => e.CommandResults).HasElementName(DbConstants.Columns.CommandResults);
-
-                entity.OwnsOne(e => e.Trace, trace =>
-                {
-                    trace.Property(e => e.Message).HasElementName(DbConstants.Columns.TraceMessage);
-
-                    trace.OwnsOne(e => e.Engine, engine =>
-                    {
-                        engine.Property(e => e.Type).HasElementName(DbConstants.Columns.EngineType);
-                        engine.Property(e => e.Version).HasElementName(DbConstants.Columns.EngineVersion);
-                        engine.Property(e => e.Configs).HasElementName(DbConstants.Columns.EngineConfigs);
-
-                        engine.Property(e => e.SysPaths)
-                            .HasElementName(DbConstants.Columns.EngineSysPaths)
-                            .HasConversion(
-                                v => v == null ? null : string.Join(";", v),
-                                v => string.IsNullOrEmpty(v) ? null : v.Split(";")
-                            );
-                    });
-                });
             });
 
             modelBuilder.Entity<EventRecord>(entity =>
             {
-                entity.ToCollection(DbConstants.Tables.Events);
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasElementName(DbConstants.Columns.Id);
-                entity.Property(e => e.HandlerId).HasElementName(DbConstants.Columns.HandlerId);
-                entity.Property(e => e.EventType).HasElementName(DbConstants.Columns.EventType);
-                entity.Property(e => e.Status).HasElementName(DbConstants.Columns.Status);
-
                 entity.Property(e => e.Timestamp)
-                    .HasElementName(DbConstants.Columns.Timestamp)
                     .HasBsonRepresentation(BsonType.DateTime);
-
-                entity.Property(e => e.Username).HasElementName(DbConstants.Columns.Username);
-                entity.Property(e => e.HostUsername).HasElementName(DbConstants.Columns.HostUsername);
-                entity.Property(e => e.RevitBuild).HasElementName(DbConstants.Columns.RevitBuild);
-                entity.Property(e => e.RevitVersion).HasElementName(DbConstants.Columns.RevitVersion);
-                entity.Property(e => e.Cancelled).HasElementName(DbConstants.Columns.Cancelled);
-                entity.Property(e => e.Cancellable).HasElementName(DbConstants.Columns.Cancellable);
-                entity.Property(e => e.DocumentId).HasElementName(DbConstants.Columns.DocumentId);
-                entity.Property(e => e.DocumentType).HasElementName(DbConstants.Columns.DocumentType);
-                entity.Property(e => e.DocumentTemplate).HasElementName(DbConstants.Columns.DocumentTemplate);
-                entity.Property(e => e.DocumentName).HasElementName(DbConstants.Columns.DocumentName);
-                entity.Property(e => e.DocumentPath).HasElementName(DbConstants.Columns.DocumentPath);
-                entity.Property(e => e.ProjectName).HasElementName(DbConstants.Columns.ProjectName);
-                entity.Property(e => e.ProjectNum).HasElementName(DbConstants.Columns.ProjectNum);
-                entity.Property(e => e.EventArgs).HasElementName(DbConstants.Columns.EventArgs);
             });
         }
 
-        private void ConfigureSqlModel(ModelBuilder modelBuilder)
+        private static void ConfigureSqlModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ScriptRecord>(entity =>
             {
-                entity.ToTable(DbConstants.Tables.Scripts);
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasColumnName(DbConstants.Columns.Id);
-                entity.Property(e => e.SessionId).HasColumnName(DbConstants.Columns.SessionId);
-                entity.Property(e => e.Timestamp).HasColumnName(DbConstants.Columns.Timestamp);
-                entity.Property(e => e.Username).HasColumnName(DbConstants.Columns.Username);
-                entity.Property(e => e.HostUsername).HasColumnName(DbConstants.Columns.HostUsername);
-                entity.Property(e => e.RevitBuild).HasColumnName(DbConstants.Columns.RevitBuild);
-                entity.Property(e => e.RevitVersion).HasColumnName(DbConstants.Columns.RevitVersion);
-                entity.Property(e => e.PyRevitVersion).HasColumnName(DbConstants.Columns.PyRevitVersion);
-                entity.Property(e => e.CloneName).HasColumnName(DbConstants.Columns.CloneName);
-                entity.Property(e => e.IsDebug).HasColumnName(DbConstants.Columns.IsDebug);
-                entity.Property(e => e.IsConfig).HasColumnName(DbConstants.Columns.IsConfig);
-                entity.Property(e => e.IsExecFromGui).HasColumnName(DbConstants.Columns.IsExecFromGui);
-                entity.Property(e => e.ExecId).HasColumnName(DbConstants.Columns.ExecId);
-                entity.Property(e => e.ExecTimestamp).HasColumnName(DbConstants.Columns.ExecTimestamp);
-                entity.Property(e => e.CommandBundle).HasColumnName(DbConstants.Columns.CommandBundle);
-                entity.Property(e => e.CommandExtension).HasColumnName(DbConstants.Columns.CommandExtension);
-                entity.Property(e => e.CommandName).HasColumnName(DbConstants.Columns.CommandName);
-                entity.Property(e => e.CommandUniqueName).HasColumnName(DbConstants.Columns.CommandUniqueName);
-                entity.Property(e => e.DocumentName).HasColumnName(DbConstants.Columns.DocumentName);
-                entity.Property(e => e.DocumentPath).HasColumnName(DbConstants.Columns.DocumentPath);
-                entity.Property(e => e.ResultCode).HasColumnName(DbConstants.Columns.ResultCode);
-                entity.Property(e => e.ScriptPath).HasColumnName(DbConstants.Columns.ScriptPath);
-                entity.Property(e => e.CommandResults).HasColumnName(DbConstants.Columns.CommandResults);
-
                 entity.OwnsOne(e => e.Trace, trace =>
                 {
-                    trace.Property(e => e.Message).HasColumnName(DbConstants.Columns.TraceMessage);
+                    trace.Property(e => e.Message).HasColumnName(PropertyNames.TraceMessage);
 
                     trace.OwnsOne(e => e.Engine, engine =>
                     {
-                        engine.Property(e => e.Type).HasColumnName(DbConstants.Columns.EngineType);
-                        engine.Property(e => e.Version).HasColumnName(DbConstants.Columns.EngineVersion);
-                        engine.Property(e => e.Configs).HasColumnName(DbConstants.Columns.EngineConfigs);
+                        engine.Property(e => e.Type).HasColumnName(PropertyNames.EngineType);
+                        engine.Property(e => e.Version).HasColumnName(PropertyNames.EngineVersion);
+                        engine.Property(e => e.Configs).HasColumnName(PropertyNames.EngineConfigs);
 
                         engine.Property(e => e.SysPaths)
-                            .HasColumnName(DbConstants.Columns.EngineSysPaths)
+                            .HasColumnName(PropertyNames.EngineSysPaths)
                             .HasConversion(
                                 v => v == null ? null : string.Join(";", v),
                                 v => string.IsNullOrEmpty(v) ? null : v.Split(";")
                             );
                     });
                 });
-            });
-
-            modelBuilder.Entity<EventRecord>(entity =>
-            {
-                entity.ToTable(DbConstants.Tables.Events);
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasColumnName(DbConstants.Columns.Id);
-                entity.Property(e => e.HandlerId).HasColumnName(DbConstants.Columns.HandlerId);
-                entity.Property(e => e.EventType).HasColumnName(DbConstants.Columns.EventType);
-                entity.Property(e => e.Status).HasColumnName(DbConstants.Columns.Status);
-                entity.Property(e => e.Timestamp).HasColumnName(DbConstants.Columns.Timestamp);
-                entity.Property(e => e.Username).HasColumnName(DbConstants.Columns.Username);
-                entity.Property(e => e.HostUsername).HasColumnName(DbConstants.Columns.HostUsername);
-                entity.Property(e => e.RevitBuild).HasColumnName(DbConstants.Columns.RevitBuild);
-                entity.Property(e => e.RevitVersion).HasColumnName(DbConstants.Columns.RevitVersion);
-                entity.Property(e => e.Cancelled).HasColumnName(DbConstants.Columns.Cancelled);
-                entity.Property(e => e.Cancellable).HasColumnName(DbConstants.Columns.Cancellable);
-                entity.Property(e => e.DocumentId).HasColumnName(DbConstants.Columns.DocumentId);
-                entity.Property(e => e.DocumentType).HasColumnName(DbConstants.Columns.DocumentType);
-                entity.Property(e => e.DocumentTemplate).HasColumnName(DbConstants.Columns.DocumentTemplate);
-                entity.Property(e => e.DocumentName).HasColumnName(DbConstants.Columns.DocumentName);
-                entity.Property(e => e.DocumentPath).HasColumnName(DbConstants.Columns.DocumentPath);
-                entity.Property(e => e.ProjectName).HasColumnName(DbConstants.Columns.ProjectName);
-                entity.Property(e => e.ProjectNum).HasColumnName(DbConstants.Columns.ProjectNum);
-                entity.Property(e => e.EventArgs).HasColumnName(DbConstants.Columns.EventArgs);
             });
         }
     }

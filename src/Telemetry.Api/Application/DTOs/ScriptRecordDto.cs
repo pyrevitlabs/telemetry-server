@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Telemetry.Api.Domain.Constants;
 using Telemetry.Api.JsonConverters;
 
 namespace Telemetry.Api.Application.DTOs
@@ -12,7 +13,7 @@ namespace Telemetry.Api.Application.DTOs
         /// <summary>
         ///     Unique session id (created when revit is opened).
         /// </summary>
-        [JsonPropertyName("sessionid")]
+        [JsonPropertyName(PropertyNames.SessionId)]
         public required Guid SessionId { get; init; }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Telemetry.Api.Application.DTOs
         /// <summary>
         ///     When script started.
         /// </summary>
-        [JsonPropertyName("timestamp")]
+        [JsonPropertyName(PropertyNames.Timestamp)]
         public required DateTimeOffset Timestamp { get; init; }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     who use Autodesk Revit (sets in options).
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("username")]
+        [JsonPropertyName(PropertyNames.Username)]
         public required string Username { get; init; }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     who logged in Windows.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("host_user")]
+        [JsonPropertyName(PropertyNames.HostUsername)]
         public string? HostUsername { get; init; }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     of the Autodesk Revit application.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("revitbuild")]
+        [JsonPropertyName(PropertyNames.RevitBuild)]
         public required string RevitBuild { get; init; }
 
         /// <summary>
@@ -58,14 +59,14 @@ namespace Telemetry.Api.Application.DTOs
         ///     of the Revit application.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("revit")]
+        [JsonPropertyName(PropertyNames.RevitVersion)]
         public required string RevitVersion { get; init; }
 
         /// <summary>
         ///     pyrevit build version.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("pyrevit")]
+        [JsonPropertyName(PropertyNames.PyRevitVersion)]
         public required string PyRevitVersion { get; init; }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://pyrevitlabs.notion.site/Manage-pyRevit-clones-e9f789f9431346b482021f2a87a6dabf">clone name</a>.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("clone")]
+        [JsonPropertyName(PropertyNames.CloneName)]
         public required string CloneName { get; init; }
 
         /// <summary>
@@ -84,68 +85,68 @@ namespace Telemetry.Api.Application.DTOs
         ///         mode
         ///     </a>.
         /// </summary>
-        [JsonPropertyName("debug")]
+        [JsonPropertyName(PropertyNames.IsDebug)]
         public bool IsDebug { get; init; }
 
         /// <summary>
         ///     pyrevit
         ///     <a href="https://pyrevitlabs.notion.site/Button-Click-Modes-c829c5a60ddb4c3e819bc93dfbc3c98b">config mode</a>.
         /// </summary>
-        [JsonPropertyName("config")]
+        [JsonPropertyName(PropertyNames.IsConfig)]
         public bool IsConfig { get; init; }
 
         /// <summary>
         ///     If script was run from GUI (Click Revit Ribbon) <see langword="true" />, otherwise  <see langword="false" />.
         /// </summary>
-        [JsonPropertyName("from_gui")]
+        [JsonPropertyName(PropertyNames.IsExecFromGui)]
         public bool IsExecFromGui { get; init; }
 
         /// <summary>
         ///     Unique execution id.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("exec_id")]
+        [JsonPropertyName(PropertyNames.ExecId)]
         public required string ExecId { get; init; }
 
         /// <summary>
         ///     When script executed.
         /// </summary>
-        [JsonPropertyName("exec_timestamp")]
+        [JsonPropertyName(PropertyNames.ExecTimestamp)]
         public required DateTimeOffset ExecTimestamp { get; init; }
 
         /// <summary>
         ///     Command bundle name.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("commandbundle")]
+        [JsonPropertyName(PropertyNames.CommandBundle)]
         public required string CommandBundle { get; init; }
 
         /// <summary>
         ///     Command extension name.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("commandextension")]
+        [JsonPropertyName(PropertyNames.CommandExtension)]
         public required string CommandExtension { get; init; }
 
         /// <summary>
         ///     Command name.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("commandname")]
+        [JsonPropertyName(PropertyNames.CommandName)]
         public required string CommandName { get; init; }
 
         /// <summary>
         ///     Command unique name.
         /// </summary>
         [MaxLength(500)]
-        [JsonPropertyName("commanduniquename")]
+        [JsonPropertyName(PropertyNames.CommandUniqueName)]
         public required string CommandUniqueName { get; init; }
 
         /// <summary>
         ///     Document <a href="https://www.revitapidocs.com/2022/4cee7916-d799-fc83-daf3-97cb03900b72.htm">Title</a> property.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("docname")]
+        [JsonPropertyName(PropertyNames.DocumentName)]
         public string? DocumentName { get; init; }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     property.
         /// </summary>
         [MaxLength(1024)]
-        [JsonPropertyName("docpath")]
+        [JsonPropertyName(PropertyNames.DocumentPath)]
         public string? DocumentPath { get; init; }
 
         /// <summary>
@@ -161,27 +162,27 @@ namespace Telemetry.Api.Application.DTOs
         ///     <br /><a href="https://www.revitapidocs.com/2022/e6cebb3c-0c3f-7dc4-2063-e5df0a00b2f5.htm">ResultCode</a>
         ///     enumeration.
         /// </summary>
-        [JsonPropertyName("resultcode")]
+        [JsonPropertyName(PropertyNames.ResultCode)]
         public int ResultCode { get; init; }
 
         /// <summary>
         ///     Executed script path.
         /// </summary>
         [MaxLength(1024)]
-        [JsonPropertyName("scriptpath")]
+        [JsonPropertyName(PropertyNames.ScriptPath)]
         public required string ScriptPath { get; init; }
 
         /// <summary>
         ///     Information about execution.
         /// </summary>
-        [JsonPropertyName("trace")]
+        [JsonPropertyName(PropertyNames.Trace)]
         public required TraceInfoDto Trace { get; init; }
 
         /// <summary>
         ///     Additional command results.
         /// </summary>
         [MaxLength(8000)]
-        [JsonPropertyName("commandresults")]
+        [JsonPropertyName(PropertyNames.CommandResults)]
         [JsonConverter(typeof(DynamicDataJsonConverter))]
         public string? CommandResults { get; init; }
     }

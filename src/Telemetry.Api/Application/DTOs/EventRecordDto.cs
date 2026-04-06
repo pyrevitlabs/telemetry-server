@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Telemetry.Api.Domain.Constants;
 using Telemetry.Api.JsonConverters;
 
 namespace Telemetry.Api.Application.DTOs
@@ -12,7 +13,7 @@ namespace Telemetry.Api.Application.DTOs
         /// <summary>
         ///     Unique event id.
         /// </summary>
-        [JsonPropertyName("handler_id")]
+        [JsonPropertyName(PropertyNames.HandlerId)]
         public required Guid HandlerId { get; init; }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     Event type name.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("type")]
+        [JsonPropertyName(PropertyNames.EventType)]
         public required string EventType { get; init; }
 
         /// <summary>
@@ -33,13 +34,13 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://www.revitapidocs.com/2022/a739b1f8-6b3b-a95b-b536-6e5d00d12e4e.htm">status</a>.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("status")]
+        [JsonPropertyName(PropertyNames.Status)]
         public string? Status { get; init; }
 
         /// <summary>
         ///     When event started.
         /// </summary>
-        [JsonPropertyName("timestamp")]
+        [JsonPropertyName(PropertyNames.Timestamp)]
         public required DateTimeOffset Timestamp { get; init; }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     who use Autodesk Revit (sets in options).
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("username")]
+        [JsonPropertyName(PropertyNames.Username)]
         public required string Username { get; init; }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     who logged in Windows.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("host_user")]
+        [JsonPropertyName(PropertyNames.HostUsername)]
         public string? HostUsername { get; init; }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     of the Autodesk Revit application.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("revitbuild")]
+        [JsonPropertyName(PropertyNames.RevitBuild)]
         public required string RevitBuild { get; init; }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     of the Revit application.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("revit")]
+        [JsonPropertyName(PropertyNames.RevitVersion)]
         public required string RevitVersion { get; init; }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <br />RevitAPIEventArgs
         ///     <a href="https://www.revitapidocs.com/2022/5627aeaa-9d9c-dcbe-b34f-db40f1c025be.htm">IsCancelled</a> method.
         /// </summary>
-        [JsonPropertyName("cancelled")]
+        [JsonPropertyName(PropertyNames.Cancelled)]
         public bool? Cancelled { get; init; }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <br />RevitAPIEventArgs
         ///     <a href="https://www.revitapidocs.com/2022/a393138a-34b5-1724-aa69-92cef651482b.htm">Cancellable</a> property.
         /// </summary>
-        [JsonPropertyName("cancellable")]
+        [JsonPropertyName(PropertyNames.Cancellable)]
         public bool? Cancellable { get; init; }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <br />DocumentClosedEventArgs
         ///     <a href="https://www.revitapidocs.com/2022/b9c0620b-817c-c85e-322e-c56cc942eda2.htm">DocumentId</a> property.
         /// </summary>
-        [JsonPropertyName("docid")]
+        [JsonPropertyName(PropertyNames.DocumentId)]
         public int DocumentId { get; init; }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://www.revitapidocs.com/2022/a7986733-b89f-3cb3-0e60-96c2a1beb1f5.htm">DocumentType</a> property.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("doctype")]
+        [JsonPropertyName(PropertyNames.DocumentType)]
         public string? DocumentType { get; init; }
 
         /// <summary>
@@ -121,14 +122,14 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://www.revitapidocs.com/2022/634fd76a-8466-b705-b20d-b5a0c7303a80.htm">Template</a> property.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("doctemplate")]
+        [JsonPropertyName(PropertyNames.DocumentTemplate)]
         public string? DocumentTemplate { get; init; }
 
         /// <summary>
         ///     Document <a href="https://www.revitapidocs.com/2022/4cee7916-d799-fc83-daf3-97cb03900b72.htm">Title</a> property.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("docname")]
+        [JsonPropertyName(PropertyNames.DocumentName)]
         public string? DocumentName { get; init; }
 
         /// <summary>
@@ -136,7 +137,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     property.
         /// </summary>
         [MaxLength(1024)]
-        [JsonPropertyName("docpath")]
+        [JsonPropertyName(PropertyNames.DocumentPath)]
         public string? DocumentPath { get; init; }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://www.revitapidocs.com/2022/fb011c91-be7e-f737-28c7-3f1e1917a0e0.htm">(BuiltInParameter.PROJECT_NAME)</a>.
         /// </summary>
         [MaxLength(250)]
-        [JsonPropertyName("projectname")]
+        [JsonPropertyName(PropertyNames.ProjectName)]
         public string? ProjectName { get; init; }
 
         /// <summary>
@@ -152,14 +153,14 @@ namespace Telemetry.Api.Application.DTOs
         ///     <a href="https://www.revitapidocs.com/2022/fb011c91-be7e-f737-28c7-3f1e1917a0e0.htm">(BuiltInParameter.PROJECT_NUMBER)</a>.
         /// </summary>
         [MaxLength(100)]
-        [JsonPropertyName("projectnum")]
+        [JsonPropertyName(PropertyNames.ProjectNum)]
         public string? ProjectNum { get; init; }
 
         /// <summary>
         ///     Dynamic event args data.
         /// </summary>
         [MaxLength(8000)]
-        [JsonPropertyName("args")]
+        [JsonPropertyName(PropertyNames.EventArgs)]
         [JsonConverter(typeof(DynamicDataJsonConverter))]
         public string? EventArgs { get; init; }
     }

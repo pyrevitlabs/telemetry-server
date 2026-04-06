@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Telemetry.Api.Domain.Constants;
 using Telemetry.Api.JsonConverters;
 
 namespace Telemetry.Api.Domain.Models
@@ -10,21 +11,26 @@ namespace Telemetry.Api.Domain.Models
     /// <summary>
     ///     Script record information.
     /// </summary>
+    [Table("scripts")]
     public class ScriptRecord
     {
         /// <summary>
         /// Scripts id.
         /// </summary>
+        [Key]
+        [Column(PropertyNames.Id)]
         public Guid Id { get; init; }
         
         /// <summary>
         ///     Unique session id (created when revit is opened).
         /// </summary>
+        [Column(PropertyNames.SessionId)]
         public Guid SessionId { get; init; }
         
         /// <summary>
         ///     When script started.
         /// </summary>
+        [Column(PropertyNames.Timestamp)]
         public DateTimeOffset Timestamp { get; init; }
 
         /// <summary>
@@ -32,6 +38,7 @@ namespace Telemetry.Api.Domain.Models
         ///     who use Autodesk Revit (sets in options).
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.Username)]
         public required string Username { get; init; }
 
         /// <summary>
@@ -39,6 +46,7 @@ namespace Telemetry.Api.Domain.Models
         ///     who logged in Windows.
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.HostUsername)]
         public string? HostUsername { get; init; }
 
         /// <summary>
@@ -47,6 +55,7 @@ namespace Telemetry.Api.Domain.Models
         ///     of the Autodesk Revit application.
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.RevitBuild)]
         public required string RevitBuild { get; init; }
 
         /// <summary>
@@ -55,12 +64,14 @@ namespace Telemetry.Api.Domain.Models
         ///     of the Revit application.
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.RevitVersion)]
         public required string RevitVersion { get; init; }
 
         /// <summary>
         ///     pyrevit build version.
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.PyRevitVersion)]
         public required string PyRevitVersion { get; init; }
 
         /// <summary>
@@ -68,6 +79,7 @@ namespace Telemetry.Api.Domain.Models
         ///     <a href="https://pyrevitlabs.notion.site/Manage-pyRevit-clones-e9f789f9431346b482021f2a87a6dabf">clone name</a>.
         /// </summary>
         [MaxLength(100)] 
+        [Column(PropertyNames.CloneName)]
         public required string CloneName { get; init; }
 
         /// <summary>
@@ -78,59 +90,68 @@ namespace Telemetry.Api.Domain.Models
         ///         mode
         ///     </a>.
         /// </summary>
+        [Column(PropertyNames.IsDebug)]
         public bool IsDebug { get; init; }
         
         /// <summary>
         ///     pyrevit
         ///     <a href="https://pyrevitlabs.notion.site/Button-Click-Modes-c829c5a60ddb4c3e819bc93dfbc3c98b">config mode</a>.
         /// </summary>
-        [BsonElement("config")]
+        [Column(PropertyNames.IsConfig)]
         public bool IsConfig { get; init; }
         
         /// <summary>
         ///     If script was run from GUI (Click Revit Ribbon) <see langword="true" />, otherwise  <see langword="false" />.
         /// </summary>
+        [Column(PropertyNames.IsExecFromGui)]
         public bool IsExecFromGui { get; init; }
 
         /// <summary>
         ///     Unique execution id.
         /// </summary>
         [MaxLength(100)]
+        [Column(PropertyNames.ExecId)]
         public required string ExecId { get; init; }
 
         /// <summary>
         ///     When script executed.
         /// </summary>
+        [Column(PropertyNames.ExecTimestamp)]
         public DateTimeOffset ExecTimestamp { get; init; }
 
         /// <summary>
         ///     Command bundle name.
         /// </summary>
         [MaxLength(250)] 
+        [Column(PropertyNames.CommandBundle)]
         public required string CommandBundle { get; init; }
 
         /// <summary>
         ///     Command extension name.
         /// </summary>
         [MaxLength(250)] 
+        [Column(PropertyNames.CommandExtension)]
         public required string CommandExtension { get; init; }
 
         /// <summary>
         ///     Command name.
         /// </summary>
         [MaxLength(250)] 
+        [Column(PropertyNames.CommandName)]
         public required string CommandName { get; init; }
 
         /// <summary>
         ///     Command unique name.
         /// </summary>
         [MaxLength(500)]
+        [Column(PropertyNames.CommandUniqueName)]
         public required string CommandUniqueName { get; init; }
 
         /// <summary>
         ///     Document <a href="https://www.revitapidocs.com/2022/4cee7916-d799-fc83-daf3-97cb03900b72.htm">Title</a> property.
         /// </summary>
         [MaxLength(250)] 
+        [Column(PropertyNames.DocumentName)]
         public string? DocumentName { get; init; }
 
         /// <summary>
@@ -138,6 +159,7 @@ namespace Telemetry.Api.Domain.Models
         ///     property.
         /// </summary>
         [MaxLength(1024)] 
+        [Column(PropertyNames.DocumentPath)]
         public string? DocumentPath { get; init; }
 
         /// <summary>
@@ -145,23 +167,27 @@ namespace Telemetry.Api.Domain.Models
         ///     <br /><a href="https://www.revitapidocs.com/2022/e6cebb3c-0c3f-7dc4-2063-e5df0a00b2f5.htm">ResultCode</a>
         ///     enumeration.
         /// </summary>
+        [Column(PropertyNames.ResultCode)]
         public int ResultCode { get; init; }
 
         /// <summary>
         ///     Executed script path.
         /// </summary>
         [MaxLength(1024)]
+        [Column(PropertyNames.ScriptPath)]
         public required string ScriptPath { get; init; }
 
         /// <summary>
         ///     Information about execution.
         /// </summary>
+        [Column(PropertyNames.Trace)]
         public required TraceInfo Trace { get; init; }
 
         /// <summary>
         ///     Additional command results.
         /// </summary>
         [MaxLength(8000)]
+        [Column(PropertyNames.CommandResults)]
         public string? CommandResults { get; init; }
     }
 }
