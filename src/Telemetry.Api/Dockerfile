@@ -3,18 +3,7 @@
 COPY LICENSE.md /LICENSE.md
 
 ARG VERSION="2.0.0"
-
-LABEL org.opencontainers.image.vendor="pyrevitlabs"
-LABEL org.opencontainers.image.authors="pyrevitlabs, Biseuv Olzhas (dosymep)"
-LABEL org.opencontainers.image.url="https://github.com/pyrevitlabs/telemetry-server"
-LABEL org.opencontainers.image.source="https://github.com/pyrevitlabs/telemetry-server"
-LABEL org.opencontainers.image.documentation="https://github.com/pyrevitlabs/telemetry-server/blob/main/README.md"
-LABEL org.opencontainers.image.base.name="ghcr.io/pyrevitlabs/telemetry-server:${VERSION}"
-LABEL org.opencontainers.image.version="${VERSION}"
-LABEL org.opencontainers.image.licenses="GPL-3.0"
-LABEL org.opencontainers.image.title="pyrevitlabs/telemetry-server"
-LABEL org.opencontainers.image.description="A high-performance .NET 10 Web API service designed to collect and store telemetry data \
-from pyRevit It supports multiple database providers and can be easily deployed using Docker."
+ENV APP_VERSION=${VERSION}
 
 # fix cannot load library libgssapi_krb5.so.2 (postgres)
 RUN apt-get update \

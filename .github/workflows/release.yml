@@ -1,27 +1,59 @@
-name: Tests
+name: release
 
 on:
   push:
+    tags: [ v*.*.* ]
+  pull_request:
     branches: [ main ]
-    
+  workflow_dispatch:
+
 env:
   BUILD_PATH: /bin
-  BUILD_CONFIGURATION: Release
+  BUILD_CONFIGURATION: ${{ startsWith(github.ref, 'refs/tags/') && 'Release' || 'Debug' }}
   PUBLISH_PATH: /publish
   MIGRATIONS_PATH: migrations
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
-  publish:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        
-      - name: Generate version
-        run: echo "VERSION=2.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Test
+        run: dotnet test --no-build -c ${{ env.BUILD_CONFIGURATION }} --results-directory TestResults/
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: TestResults/**
+  
+  publish:
+    needs: [ tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -38,7 +70,7 @@ jobs:
           dotnet build "./src/Telemetry.Migrations.Postgres/Telemetry.Migrations.Postgres.csproj" -c $BUILD_CONFIGURATION -o $BUILD_PATH
           dotnet build "./src/Telemetry.Migrations.Sqlite/Telemetry.Migrations.Sqlite.csproj" -c $BUILD_CONFIGURATION -o $BUILD_PATH
           dotnet build "./src/Telemetry.Migrations.SqlServer/Telemetry.Migrations.SqlServer.csproj" -c $BUILD_CONFIGURATION -o $BUILD_PATH
-      
+
       - name: Publish
         run: |
           dotnet publish "./src/Telemetry.Api/Telemetry.Api.csproj" -c $BUILD_CONFIGURATION -o $PUBLISH_PATH
@@ -57,7 +89,18 @@ jobs:
             ${{ env.MIGRATIONS_PATH }}/postgres/Telemetry.Migrations.Postgres.dll
             ${{ env.MIGRATIONS_PATH }}/sqlite/Telemetry.Migrations.Sqlite.dll
             ${{ env.MIGRATIONS_PATH }}/sqlserver/Telemetry.Migrations.SqlServer.dll
-            
+  
+  app-release:
+    needs: [ publish ]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: publish
+          path: ${{ env.PUBLISH_PATH }}
+
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         env:
@@ -65,53 +108,55 @@ jobs:
         with:
           draft: true
           prerelease: false
-          body: dont forget fill changelog
-          tag_name: ${{ env.VERSION }}
-          name: pyrevit-telemetry ${{ env.VERSION }}
-          files: |
-            ${{ env.BUILD_PATH }}/*.*
-            ${{ env.MIGRATIONS_PATH }}/oracle/Telemetry.Migrations.Oracle.dll
-            ${{ env.MIGRATIONS_PATH }}/postgres/Telemetry.Migrations.Postgres.dll
-            ${{ env.MIGRATIONS_PATH }}/sqlite/Telemetry.Migrations.Sqlite.dll
-            ${{ env.MIGRATIONS_PATH }}/sqlserver/Telemetry.Migrations.SqlServer.dll
-            
+          generate_release_notes: true
+          files: ${{ env.PUBLISH_PATH }}/**
+  
   docker-publish:
+    needs: [ tests ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      
-      - name: Generate a version
-        run: echo "VERSION=2.0.${{ github.run_number }}" >> $GITHUB_ENV
-      
+
       - name: Login to Docker Hub
         uses: docker/login-action@v4
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-  
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,prefix=
+            type=ref,event=pr
+          labels: |
+            org.opencontainers.image.authors=${{ github.repository_owner }}, Biseuv Olzhas (dosymep)
+            org.opencontainers.image.licenses=GPL-3.0
+            org.opencontainers.image.description=A high-performance .NET 10 Web API service designed to collect and store telemetry data from pyRevit.
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
-  
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
-  
+
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           platforms: linux/amd64,linux/arm64
-          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: ${{ startsWith(github.ref, 'refs/tags/') }}
           context: .
           file: src/Telemetry.Api/Dockerfile
-          tags: ghcr.io/${{ github.repository }}:latest
-          build-args: VERSION=latest
-  
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          platforms: linux/amd64,linux/arm64
-          push: true
-          context: .
-          file: src/Telemetry.Api/Dockerfile
-          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}
-          build-args: VERSION=${{ env.VERSION }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: |
+            VERSION=${{ steps.meta.outputs.version }}
