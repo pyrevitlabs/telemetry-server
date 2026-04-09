@@ -22,6 +22,7 @@ namespace Telemetry.Api.IntegrationTests
         public virtual async Task InitializeAsync()
         {
             Client = CreateClient();
+            await Task.CompletedTask;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
