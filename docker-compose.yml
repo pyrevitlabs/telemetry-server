@@ -1,7 +1,7 @@
 services:
   telemetry-api:
     container_name: telemetry-api
-    image: pyrevit-telemetry:latest
+    image: ghcr.io/pyrevitlabs/telemetry-server:latest
     build:
       context: .
       dockerfile: src/Telemetry.Api/Dockerfile
