@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using System.Text;
 using Telemetry.Api.Application.DTOs;
 using TUnit.Core.Interfaces;
 
@@ -76,7 +77,7 @@ namespace Telemetry.Api.IntegrationTests
                         Configs = "some configs"
                     }
                 },
-                CommandResults = "success"
+                CommandResults = "{}"
             };
         }
 
@@ -101,8 +102,62 @@ namespace Telemetry.Api.IntegrationTests
                 DocumentPath = "C:\\test.rvt",
                 ProjectName = "Test Project",
                 ProjectNum = "123-456",
-                EventArgs = "some args"
+                EventArgs = "{}"
             };
+        }
+
+        [Test]
+        public async Task PostScript_ReturnsOk()
+        {
+            // Arrange
+            ScriptRecordDto dto = CreateSampleScriptDto();
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsJsonAsync("/api/v2/scripts", dto);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Test]
+        public async Task PostEvent_ReturnsOk()
+        {
+            // Arrange
+            EventRecordDto dto = CreateSampleEventDto();
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsJsonAsync("/api/v2/events", dto);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Test]
+        public async Task PostRawScript_ReturnsOk()
+        {
+            // Arrange
+            var content = await File.ReadAllTextAsync("assets/script.json");
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsync("/api/v2/scripts", stringContent);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Test]
+        public async Task PostRawEvent_ReturnsOk()
+        {
+            // Arrange
+            var content = await File.ReadAllTextAsync("assets/event.json");
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsync("/api/v2/events", stringContent);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
         }
     }
 }
