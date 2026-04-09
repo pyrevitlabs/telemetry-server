@@ -19,12 +19,16 @@ namespace Telemetry.Api.Infrastructure.Persistence
         private readonly IMongoCollection<EventRecord> _eventsCollection;
         private readonly IMongoCollection<ScriptRecord> _scriptCollection;
 
+        static MongoNativeDbContext()
+        {
+            OnModelCreating();
+        }
+
         public MongoNativeDbContext(IMongoClient mongoClient, string mongodbName)
         {
             _mongoClient = mongoClient;
             _mongoDatabase = _mongoClient.GetDatabase(mongodbName);
-
-            OnModelCreating();
+            
             _eventsCollection = _mongoDatabase.GetCollection<EventRecord>(GetCollectionName<EventRecord>());
             _scriptCollection = _mongoDatabase.GetCollection<ScriptRecord>(GetCollectionName<ScriptRecord>());
         }
