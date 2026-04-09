@@ -19,7 +19,14 @@ internal class DynamicDataBsonSerializer : SerializerBase<string?>
         }
         else
         {
-            BsonDocumentSerializer.Instance.Serialize(context, BsonDocument.Parse(value));
+            if (BsonDocument.TryParse(value, out BsonDocument result))
+            {
+                BsonDocumentSerializer.Instance.Serialize(context, result);
+            }
+            else
+            {
+                context.Writer.WriteString(value);
+            }
         }
     }
 }
