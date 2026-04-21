@@ -1,0 +1,9 @@
+services:
+  telemetry-api:
+    container_name: telemetry-api
+    image: ghcr.io/pyrevitlabs/telemetry-server:2.0.14-alpha
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}

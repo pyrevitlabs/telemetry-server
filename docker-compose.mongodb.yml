@@ -1,0 +1,26 @@
+services:
+  telemetry-api:
+    environment:
+      - DbProvider=mongodb
+      - MongoDbDatabaseName=${MONGODB_DATABASE_NAME}
+      - ConnectionStrings__DefaultConnection=mongodb://${MONGODB_ROOT_USER}:${MONGODB_ROOT_PASSWORD}@telemetry-db:27017
+    depends_on:
+      telemetry-db:
+        condition: service_healthy
+
+  telemetry-db:
+    image: mongo:8.2
+    container_name: telemetry-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGODB_DATABASE_NAME}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./telemetry-db/mongodb:/data/db
+    healthcheck:
+      test: [ "CMD", "mongosh", "--quiet",  "--eval", "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

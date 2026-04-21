@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="TUnit"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+        <PackageReference Include="Testcontainers"/>
+        <PackageReference Include="Testcontainers.PostgreSql"/>
+        <PackageReference Include="Testcontainers.MsSql"/>
+        <PackageReference Include="Testcontainers.Oracle"/>
+        <PackageReference Include="Testcontainers.MongoDb"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Telemetry.Api\Telemetry.Api.csproj"/>
+        <ProjectReference Include="..\..\src\Telemetry.Migrations.Oracle\Telemetry.Migrations.Oracle.csproj"/>
+        <ProjectReference Include="..\..\src\Telemetry.Migrations.Postgres\Telemetry.Migrations.Postgres.csproj"/>
+        <ProjectReference Include="..\..\src\Telemetry.Migrations.Sqlite\Telemetry.Migrations.Sqlite.csproj"/>
+        <ProjectReference Include="..\..\src\Telemetry.Migrations.SqlServer\Telemetry.Migrations.SqlServer.csproj"/>
+    </ItemGroup>
+
+</Project>

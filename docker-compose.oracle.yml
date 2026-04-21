@@ -1,0 +1,28 @@
+services:
+  telemetry-api:
+    environment:
+      - DbProvider=oracle
+      - ConnectionStrings__DefaultConnection=User Id=${ORACLE_APP_USER};Password=${ORACLE_APP_USER_PASSWORD};Data Source=telemetry-db:1521/FREEPDB1;
+    depends_on:
+      telemetry-db:
+        condition: service_healthy
+
+  telemetry-db:
+    container_name: telemetry-db
+    image: gvenzl/oracle-free:23-slim
+    
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_PASSWORD}
+      - APP_USER=${ORACLE_APP_USER}
+      - APP_USER_PASSWORD=${ORACLE_APP_USER_PASSWORD}
+    volumes:
+      - ./telemetry-db/oracle:/opt/oracle/oradata
+    ports:
+      - "1521:1521"
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+      start_interval: 5s

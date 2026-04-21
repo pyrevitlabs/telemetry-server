@@ -1,0 +1,27 @@
+{
+  "handler_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "meta": {
+    "schema": "2.0.0"
+  },
+  "type": "AppStartup",
+  "status": "success",
+  "timestamp": "2024-03-27T10:00:00Z",
+  "username": "testuser",
+  "host_user": "ad\\testuser",
+  "revitbuild": "2024.1",
+  "revit": "Revit 2024",
+  "cancelled": false,
+  "docid": 42,
+  "doctype": "doc type",
+  "doctemplate": "doc template",
+  "docname": "doc name",
+  "docpath": "C:\\doc.rvt",
+  "projectname": "doc.rvt",
+  "projectnum": "projectnum",
+  "args": {
+    "operation": "transaction",
+    "added": 1,
+    "deleted": 2,
+    "modified": 4
+  }
+}
