@@ -104,7 +104,7 @@ jobs:
           
       - name: Create zip
         run: |
-          cd dist
+          cd ${{ env.PUBLISH_PATH }}
           zip -r ../telemetry-server-${{ steps.vars.outputs.version }}.zip .
 
       - name: Generate checksum
