@@ -96,6 +96,33 @@ jobs:
           name: publish
           path: ${{ env.PUBLISH_PATH }}
 
+      - name: Set version
+        id: vars
+        run: |
+          VERSION=${GITHUB_REF_NAME}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Create zip
+        run: |
+          cd dist
+          zip -r ../telemetry-server-${{ steps.vars.outputs.version }}.zip .
+
+      - name: Generate checksum
+        run: |
+          sha256sum telemetry-server-${{ steps.vars.outputs.version }}.zip > checksums.txt
+
+      - name: Generate metadata
+        run: |
+          cat <<EOF > build-info.json
+          {
+            "version": "${{ steps.vars.outputs.version }}",
+            "commit": "${GITHUB_SHA}",
+            "ref": "${GITHUB_REF}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "built_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
+          EOF
+
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         env:
@@ -104,7 +131,10 @@ jobs:
           draft: true
           prerelease: false
           generate_release_notes: true
-          files: ${{ env.PUBLISH_PATH }}/**
+          files: |
+            telemetry-server-${{ steps.vars.outputs.version }}.zip
+            checksums.txt
+            build-info.json
   
   docker-publish:
     needs: [ tests ]
