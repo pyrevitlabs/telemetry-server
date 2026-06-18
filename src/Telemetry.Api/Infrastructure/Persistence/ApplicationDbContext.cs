@@ -54,6 +54,15 @@ namespace Telemetry.Api.Infrastructure.Persistence
         public DbSet<ScriptRecord> ScriptRecords => Set<ScriptRecord>();
 
         /// <summary>
+        /// Gets or sets the collection of log records associated with the current context.
+        /// </summary>
+        /// <remarks>
+        /// This property contains a list of log data, which can be used for tracking
+        /// application events and errors.
+        /// </remarks>
+        public DbSet<LogRecord> LogRecords => Set<LogRecord>();
+
+        /// <summary>
         /// Asynchronously adds a new event record to the database context.
         /// </summary>
         /// <returns>A task that represents the asynchronous add operation.</returns>
@@ -69,6 +78,15 @@ namespace Telemetry.Api.Infrastructure.Persistence
         public async Task AddScriptRecord(ScriptRecord scriptRecord, CancellationToken cancellationToken)
         {
             await ScriptRecords.AddAsync(scriptRecord, cancellationToken);
+        }
+
+        /// <summary>
+        /// Asynchronously adds a new log record to the database context.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous add operation.</returns>
+        public async Task AddLogRecord(LogRecord logRecord, CancellationToken cancellationToken)
+        {
+            await LogRecords.AddAsync(logRecord, cancellationToken);
         }
 
         /// <summary>
@@ -183,6 +201,12 @@ namespace Telemetry.Api.Infrastructure.Persistence
             });
 
             modelBuilder.Entity<EventRecord>(entity =>
+            {
+                entity.Property(e => e.Timestamp)
+                    .HasBsonRepresentation(BsonType.DateTime);
+            });
+
+            modelBuilder.Entity<LogRecord>(entity =>
             {
                 entity.Property(e => e.Timestamp)
                     .HasBsonRepresentation(BsonType.DateTime);

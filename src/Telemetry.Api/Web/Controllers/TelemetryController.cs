@@ -124,6 +124,41 @@ namespace Telemetry.Api.Web.Controllers
         }
 
         /// <summary>
+        ///     Adds log record to DB.
+        /// </summary>
+        /// <param name="dto">Adding log records.</param>
+        /// <returns>Returns adding log records task.</returns>
+        [HttpPost("logs")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [ProducesResponseType(503)]
+        public async Task<IActionResult> PostLog([FromBody] LogRecordDto dto)
+        {
+            try
+            {
+                CancellationToken ct = HttpContext.RequestAborted;
+
+                LogRecord record = dto.ToModel();
+                await _context.AddLogRecord(record, ct);
+
+                await _context.SaveChangesAsync(ct);
+                _logger.LogInformation("Log record saved: {Level} in {PluginName}", record.Level, record.PluginName);
+                return Ok();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Database error while saving log record");
+                return StatusCode(503);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while saving log record");
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// Retrieves the current status.
         /// </summary>
         /// <returns>The current status as a status object.</returns>

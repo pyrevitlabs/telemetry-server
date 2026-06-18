@@ -208,5 +208,66 @@ namespace Telemetry.Api.Application.Mappings
                 EventArgs = model.EventArgs
             };
         }
+
+        /// <summary>
+        /// Transforms the provided DTO into its corresponding model representation.
+        /// </summary>
+        /// <param name="dto">The data transfer object to be transformed.</param>
+        /// <returns>An instance of the model derived from the given DTO.</returns>
+        public static LogRecord ToModel(this LogRecordDto dto)
+        {
+            return new LogRecord
+            {
+                Id = Guid.CreateVersion7(),
+                Timestamp = dto.Timestamp,
+                Level = dto.Level,
+                MessageTemplate = dto.MessageTemplate,
+                RenderedMessage = dto.RenderedMessage,
+                Exception = dto.Exception,
+                SessionId = dto.SessionId,
+                PluginName = dto.PluginName,
+                PluginSessionId = dto.PluginSessionId,
+                EnvironmentUserName = dto.EnvironmentUserName,
+                EnvironmentMachineName = dto.EnvironmentMachineName,
+                RevitBuild = dto.RevitBuild,
+                RevitVersion = dto.RevitVersion,
+                RevitLanguage = dto.RevitLanguage,
+                RevitUserName = dto.RevitUserName,
+                RevitDocumentTitle = dto.RevitDocumentTitle,
+                RevitDocumentPathName = dto.RevitDocumentPathName,
+                RevitDocumentModelPath = dto.RevitDocumentModelPath,
+                LogEvent = dto.LogEvent
+            };
+        }
+
+        /// <summary>
+        /// Converts the specified model object to a data transfer object representation.
+        /// </summary>
+        /// <param name="model">The model object to be converted.</param>
+        /// <returns>A new instance of the data transfer object created from the source.</returns>
+        public static LogRecordDto ToDto(this LogRecord model)
+        {
+            return new LogRecordDto
+            {
+                Timestamp = model.Timestamp,
+                Level = model.Level,
+                MessageTemplate = model.MessageTemplate,
+                RenderedMessage = model.RenderedMessage,
+                Exception = model.Exception,
+                SessionId = model.SessionId,
+                PluginName = model.PluginName,
+                PluginSessionId = model.PluginSessionId,
+                EnvironmentUserName = model.EnvironmentUserName,
+                EnvironmentMachineName = model.EnvironmentMachineName,
+                RevitBuild = model.RevitBuild,
+                RevitVersion = model.RevitVersion,
+                RevitLanguage = model.RevitLanguage,
+                RevitUserName = model.RevitUserName,
+                RevitDocumentTitle = model.RevitDocumentTitle,
+                RevitDocumentPathName = model.RevitDocumentPathName,
+                RevitDocumentModelPath = model.RevitDocumentModelPath,
+                LogEvent = model.LogEvent
+            };
+        }
     }
 }

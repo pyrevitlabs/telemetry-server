@@ -107,6 +107,30 @@ namespace Telemetry.Api.IntegrationTests
             };
         }
 
+        protected LogRecordDto CreateSampleLogDto()
+        {
+            return new LogRecordDto
+            {
+                Timestamp = DateTimeOffset.UtcNow,
+                Level = "Information",
+                MessageTemplate = "Test message {Property}",
+                RenderedMessage = "Test message value",
+                SessionId = Guid.NewGuid(),
+                PluginName = "TestPlugin",
+                PluginSessionId = Guid.NewGuid(),
+                EnvironmentUserName = "testuser",
+                EnvironmentMachineName = "test-machine",
+                RevitBuild = "2024.1",
+                RevitVersion = 2024,
+                RevitLanguage = "ENU",
+                RevitUserName = "revituser",
+                RevitDocumentTitle = "test.rvt",
+                RevitDocumentPathName = @"C:\test.rvt",
+                RevitDocumentModelPath = @"C:\test.rvt",
+                LogEvent = "{}"
+            };
+        }
+
         [Test]
         public async Task PostScript_ReturnsOk()
         {
@@ -128,6 +152,19 @@ namespace Telemetry.Api.IntegrationTests
 
             // Act
             HttpResponseMessage response = await Client.PostAsJsonAsync("/api/v2/events", dto);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Test]
+        public async Task PostLog_ReturnsOk()
+        {
+            // Arrange
+            LogRecordDto dto = CreateSampleLogDto();
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsJsonAsync("/api/v2/logs", dto);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -156,6 +193,20 @@ namespace Telemetry.Api.IntegrationTests
 
             // Act
             HttpResponseMessage response = await Client.PostAsync("/api/v2/events", stringContent);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Test]
+        public async Task PostRawLog_ReturnsOk()
+        {
+            // Arrange
+            var content = await File.ReadAllTextAsync("assets/log.json");
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+            // Act
+            HttpResponseMessage response = await Client.PostAsync("/api/v2/logs", stringContent);
 
             // Assert
             response.EnsureSuccessStatusCode();

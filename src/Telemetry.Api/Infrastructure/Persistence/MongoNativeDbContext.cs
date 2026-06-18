@@ -18,6 +18,7 @@ namespace Telemetry.Api.Infrastructure.Persistence
 
         private readonly IMongoCollection<EventRecord> _eventsCollection;
         private readonly IMongoCollection<ScriptRecord> _scriptCollection;
+        private readonly IMongoCollection<LogRecord> _logsCollection;
 
         static MongoNativeDbContext()
         {
@@ -31,6 +32,7 @@ namespace Telemetry.Api.Infrastructure.Persistence
             
             _eventsCollection = _mongoDatabase.GetCollection<EventRecord>(GetCollectionName<EventRecord>());
             _scriptCollection = _mongoDatabase.GetCollection<ScriptRecord>(GetCollectionName<ScriptRecord>());
+            _logsCollection = _mongoDatabase.GetCollection<LogRecord>(GetCollectionName<LogRecord>());
         }
 
         public async Task AddEventRecord(EventRecord eventRecord, CancellationToken cancellationToken)
@@ -41,6 +43,11 @@ namespace Telemetry.Api.Infrastructure.Persistence
         public async Task AddScriptRecord(ScriptRecord scriptRecord, CancellationToken cancellationToken)
         {
             await _scriptCollection.InsertOneAsync(scriptRecord, new InsertOneOptions(), cancellationToken);
+        }
+
+        public async Task AddLogRecord(LogRecord logRecord, CancellationToken cancellationToken)
+        {
+            await _logsCollection.InsertOneAsync(logRecord, new InsertOneOptions(), cancellationToken);
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
@@ -90,6 +97,11 @@ namespace Telemetry.Api.Infrastructure.Persistence
             if (!BsonClassMap.IsClassMapRegistered(typeof(ScriptRecord)))
             {
                 RegisterClassScriptRecord();
+            }
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(LogRecord)))
+            {
+                RegisterClassLogRecord();
             }
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(TraceInfo)))
@@ -203,6 +215,54 @@ namespace Telemetry.Api.Infrastructure.Persistence
 
                 classMap.MapProperty(p => p.CommandResults)
                     .SetElementName(PropertyNames.CommandResults)
+                    .SetSerializer(new DynamicDataBsonSerializer());
+            });
+        }
+
+        private static void RegisterClassLogRecord()
+        {
+            BsonClassMap.RegisterClassMap<LogRecord>(classMap =>
+            {
+                classMap.AutoMap();
+
+                classMap.MapIdProperty(p => p.Id)
+                    .SetElementName(PropertyNames.Id)
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                classMap.MapProperty(p => p.Timestamp)
+                    .SetElementName(PropertyNames.Timestamp)
+                    .SetSerializer(new DateTimeOffsetSerializer(BsonType.DateTime));
+
+                classMap.MapProperty(p => p.Level).SetElementName(PropertyNames.LogLevel);
+                classMap.MapProperty(p => p.MessageTemplate).SetElementName(PropertyNames.MessageTemplate);
+                classMap.MapProperty(p => p.RenderedMessage).SetElementName(PropertyNames.RenderedMessage);
+
+                classMap.MapProperty(p => p.Exception)
+                    .SetElementName(PropertyNames.Exception)
+                    .SetSerializer(new DynamicDataBsonSerializer());
+
+                classMap.MapProperty(p => p.SessionId)
+                    .SetElementName(PropertyNames.LogSessionId)
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                classMap.MapProperty(p => p.PluginName).SetElementName(PropertyNames.PluginName);
+
+                classMap.MapProperty(p => p.PluginSessionId)
+                    .SetElementName(PropertyNames.PluginSessionId)
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                classMap.MapProperty(p => p.EnvironmentUserName).SetElementName(PropertyNames.EnvironmentUserName);
+                classMap.MapProperty(p => p.EnvironmentMachineName).SetElementName(PropertyNames.EnvironmentMachineName);
+                classMap.MapProperty(p => p.RevitBuild).SetElementName(PropertyNames.LogRevitBuild);
+                classMap.MapProperty(p => p.RevitVersion).SetElementName(PropertyNames.LogRevitVersion);
+                classMap.MapProperty(p => p.RevitLanguage).SetElementName(PropertyNames.RevitLanguage);
+                classMap.MapProperty(p => p.RevitUserName).SetElementName(PropertyNames.RevitUserName);
+                classMap.MapProperty(p => p.RevitDocumentTitle).SetElementName(PropertyNames.RevitDocumentTitle);
+                classMap.MapProperty(p => p.RevitDocumentPathName).SetElementName(PropertyNames.RevitDocumentPathName);
+                classMap.MapProperty(p => p.RevitDocumentModelPath).SetElementName(PropertyNames.RevitDocumentModelPath);
+
+                classMap.MapProperty(p => p.LogEvent)
+                    .SetElementName(PropertyNames.LogEvent)
                     .SetSerializer(new DynamicDataBsonSerializer());
             });
         }

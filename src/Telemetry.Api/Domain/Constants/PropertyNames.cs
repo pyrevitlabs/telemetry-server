@@ -11,6 +11,9 @@ namespace Telemetry.Api.Domain.Constants
         /// <summary>Session identifier.</summary>
         public const string SessionId = "sessionid";
         
+        /// <summary>Session identifier.</summary>
+        public const string LogSessionId = "session_id";
+        
         /// <summary>Timestamp.</summary>
         public const string Timestamp = "timestamp";
         
@@ -23,8 +26,14 @@ namespace Telemetry.Api.Domain.Constants
         /// <summary>Revit build version.</summary>
         public const string RevitBuild = "revitbuild";
         
+        /// <summary>Revit build version.</summary>
+        public const string LogRevitBuild = "revit_build";
+
         /// <summary>Revit version.</summary>
         public const string RevitVersion = "revit";
+        
+        /// <summary>Revit version.</summary>
+        public const string LogRevitVersion = "revit_version";
         
         /// <summary>pyRevit version.</summary>
         public const string PyRevitVersion = "pyrevit";
@@ -127,5 +136,50 @@ namespace Telemetry.Api.Domain.Constants
         
         /// <summary>Event arguments.</summary>
         public const string EventArgs = "args";
+
+        /// <summary> Specifies the level of logging detail.</summary>
+        public const string LogLevel = "log_level";
+
+        /// <summary>Message template.</summary>
+        public const string MessageTemplate = "message_template";
+
+        /// <summary>Rendered message.</summary>
+        public const string RenderedMessage = "rendered_message";
+
+        /// <summary>Exception.</summary>
+        public const string Exception = "exception";
+
+        /// <summary>Plugin name.</summary>
+        public const string PluginName = "plugin_name";
+
+        /// <summary>Plugin session identifier.</summary>
+        public const string PluginSessionId = "plugin_session_id";
+
+        /// <summary>Environment username.</summary>
+        public const string EnvironmentUserName = "env_username";
+
+        /// <summary>Environment machine name.</summary>
+        public const string EnvironmentMachineName = "env_machinename";
+
+        /// <summary>Revit language.</summary>
+        public const string RevitLanguage = "revit_language";
+
+        /// <summary>Revit username.</summary>
+        public const string RevitUserName = "revit_username";
+
+        /// <summary>Document title.</summary>
+        public const string RevitDocumentTitle = "doc_title";
+
+        /// <summary>Document path name.</summary>
+        public const string RevitDocumentPathName = "doc_pathname";
+
+        /// <summary>Document model path.</summary>
+        public const string RevitDocumentModelPath = "doc_modelpath";
+
+        /// <summary>Log event.</summary>
+        public const string LogEvent = "log_event";
+
+        /// <summary>Meta information.</summary>
+        public const string Meta = "meta";
     }
 }

@@ -22,6 +22,12 @@ namespace Telemetry.Api.Application.Interfaces
         Task AddScriptRecord(ScriptRecord scriptRecord, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Asynchronously adds a new log record to the database context.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous add operation.</returns>
+        Task AddLogRecord(LogRecord logRecord, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Asynchronously saves all changes made in the current context to the database.
         /// </summary>
         /// <returns>A task that represents the asynchronous save operation.

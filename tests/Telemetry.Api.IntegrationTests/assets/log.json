@@ -1,0 +1,23 @@
+{
+  "timestamp": "2024-03-27T10:00:00Z",
+  "log_level": "Information",
+  "message_template": "User {UserName} logged in from {IpAddress}",
+  "rendered_message": "User testuser logged in from 127.0.0.1",
+  "exception": null,
+  "session_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "plugin_name": "TestPlugin",
+  "plugin_session_id": "4fa85f64-5717-4562-b3fc-2c963f66afa7",
+  "env_username": "testuser",
+  "env_machinename": "test-machine",
+  "revit_build": "2024.1",
+  "revit_version": 2024,
+  "revit_language": "ENU",
+  "revit_username": "revit-testuser",
+  "doc_title": "test.rvt",
+  "doc_pathname": "C:\\test.rvt",
+  "doc_modelpath": "C:\\test.rvt",
+  "log_event": {
+    "UserName": "testuser",
+    "IpAddress": "127.0.0.1"
+  }
+}

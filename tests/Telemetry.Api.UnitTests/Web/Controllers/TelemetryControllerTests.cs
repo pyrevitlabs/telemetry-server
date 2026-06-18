@@ -65,6 +65,23 @@ namespace Telemetry.Api.UnitTests.Web.Controllers
         }
 
         [Test]
+        public async Task PostLog_ShouldReturnOk_WhenSuccessful()
+        {
+            // Arrange
+            LogRecordDto dto = CreateValidLogRecordDto();
+            _mockContext.Setup(c => c.AddLogRecord(It.IsAny<LogRecord>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            IActionResult result = await _controller.PostLog(dto);
+
+            // Assert
+            await Assert.That(result).IsTypeOf<OkResult>();
+            _mockContext.Verify(c => c.AddLogRecord(It.IsAny<LogRecord>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
         public async Task GetStatus_ShouldReturnOk_WhenDatabaseConnected()
         {
             // Arrange
@@ -144,6 +161,25 @@ namespace Telemetry.Api.UnitTests.Web.Controllers
                 ProjectName = "project",
                 ProjectNum = "123",
                 EventArgs = "args"
+            };
+        }
+
+        private LogRecordDto CreateValidLogRecordDto()
+        {
+            return new LogRecordDto()
+            {
+                Timestamp = DateTimeOffset.Now,
+                Level = "Information",
+                MessageTemplate = "Test message",
+                RenderedMessage = "Test message",
+                SessionId = Guid.NewGuid(),
+                PluginName = "TestPlugin",
+                PluginSessionId = Guid.NewGuid(),
+                EnvironmentUserName = "user",
+                EnvironmentMachineName = "machine",
+                RevitBuild = "2024.1",
+                RevitVersion = 2024,
+                RevitLanguage = "ENU"
             };
         }
     }
