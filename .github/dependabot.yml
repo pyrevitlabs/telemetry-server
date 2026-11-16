@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 10
     groups:
       dotnet:
@@ -19,6 +21,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 25
     groups:
       dotnet:
@@ -32,6 +36,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 10
     groups:
       docker:
@@ -45,6 +51,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 10
     
     groups:
