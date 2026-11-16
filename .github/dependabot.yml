@@ -32,7 +32,9 @@ updates:
   
   # Dockerfiles
   - package-ecosystem: "docker"
-    directory: "**/*"
+    directories:
+      - "/"
+      - "**/*"
     schedule:
       interval: "weekly"
       day: "wednesday"
