@@ -9,7 +9,7 @@ services:
         condition: service_healthy
 
   telemetry-db:
-    image: mongo:8.2
+    image: mongo:9.0
     container_name: telemetry-db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USER}
