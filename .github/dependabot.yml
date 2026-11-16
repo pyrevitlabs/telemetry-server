@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 10
     groups:
       dotnet:
@@ -19,9 +21,54 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    assignees:
+      - "dosymep"
     open-pull-requests-limit: 25
     groups:
       dotnet:
         patterns:
           - "*"
+    target-branch: "main"
+  
+  # Dockerfiles
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    assignees:
+      - "dosymep"
+    open-pull-requests-limit: 10
+    groups:
+      docker:
+        patterns:
+          - "*"
+    target-branch: "main"
+
+  # Docker Compose
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    assignees:
+      - "dosymep"
+    open-pull-requests-limit: 10
+    
+    groups:
+      mongodb:
+        patterns:
+          - "mongo"
+      
+      postgres:
+        patterns:
+          - "postgres"
+      
+      other:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "mongo"
+          - "postgres"
+    
     target-branch: "main"
