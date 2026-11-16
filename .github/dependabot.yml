@@ -45,6 +45,10 @@ updates:
       docker:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "dotnet/*"
+        update-types:
+          - "version-update:semver-major"
     target-branch: "main"
 
   # Docker Compose
